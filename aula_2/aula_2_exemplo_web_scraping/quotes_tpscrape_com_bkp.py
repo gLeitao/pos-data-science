@@ -10,4 +10,9 @@ class QuotesTpscrapeComSpider(scrapy.Spider):
     def parse(self, response):
         for quote in response.css('.quote'):
             text = quote.css('span.text::text').get()
-            yield {'text': text}
+            author = quote.css('.author::text').get()
+            yield {'text': text,
+                   'author': author}
+        url = response.css('.pager .next a::attr(href)').get()
+        if url:
+            yield response.follow(url)
