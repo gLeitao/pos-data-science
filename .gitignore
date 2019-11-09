@@ -135,6 +135,7 @@ venv.bak/
 
 # local dir for temporary stuff
 .temp/
+credit_prospec/
 
 *.png
 data/
