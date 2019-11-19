@@ -134,7 +134,7 @@ venv.bak/
 .vscode
 
 # local dir for temporary stuff
-.temp/
+temp/
 credit_prospec/
 
 *.png
