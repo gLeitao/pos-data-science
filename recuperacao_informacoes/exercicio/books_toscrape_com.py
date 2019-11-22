@@ -13,8 +13,6 @@ class BooksToscrapeComSpider(scrapy.Spider):
             url = product.css('.image_container a::attr(href)').get()
             if url:
                 yield response.follow(url, self.get_book_information)
-            #yield {'URL': url}
-            # livro = self.get_book_information(response, url)
 
         urlN = response.css('.pager .next a::attr(href)').get()
         if urlN:
