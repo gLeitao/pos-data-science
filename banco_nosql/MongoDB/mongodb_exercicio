@@ -1,0 +1,859 @@
+Exercicio 1 - Aquecendo com ospets
+
+a) Adicione outro Peixe e um Hamster com nome Frodo
+    Comando: db.exercicio_mongo.insert({name:"Frodo",species:"Peixe"})
+ 
+b) Faça uma contagem dos pets na coleção
+    Comando: db.getCollection("exercicio_mongo").aggregate(
+                [
+                    { 
+                        "$group" : { 
+                            "_id" : { 
+
+                            }, 
+                            "COUNT(*)" : { 
+                                "$sum" : NumberInt(1)
+                            }
+                        }
+                    }, 
+                    { 
+                        "$project" : { 
+                            "COUNT(*)" : "$COUNT(*)", 
+                            "_id" : NumberInt(0)
+                        }
+                    }
+                ], 
+                { 
+                    "allowDiskUse" : true
+                }
+            );
+    Output: { "COUNT(*)" : 7 }
+
+c) Retorne apenas um elemento o método prático possível
+    Comando: db.getCollection("exercicio_mongo").find(
+                { 
+                    "_id" : ObjectId("5e68068c6012c8077fc4ab40")
+                }, 
+                { 
+                    "name" : "$_name"
+                }
+            );
+    Output: { "_id" : ObjectId("5e68068c6012c8077fc4ab40"), "name" : "Mike" }
+
+d) Identifique o ID para o Gato Kilha
+    Comando: db.getCollection("exercicio_mongo").find(
+                { 
+                    "name" : "Kilha", 
+                    "species" : "Gato"
+                }, 
+                { 
+                    "_id" : "$_id"
+                }
+            );
+    Output: { "_id" : ObjectId("5e6807136012c8077fc4ab42") }
+
+e) Faça uma busca pelo ID e traga o Hamster Mike
+    Comando: db.getCollection("exercicio_mongo").find(
+                { 
+                    "_id" : ObjectId("5e68068c6012c8077fc4ab40")
+                }, 
+                { 
+                    "name" : "$_name"
+                }
+            );
+    Output: { "_id" : ObjectId("5e68068c6012c8077fc4ab40"), "name" : "Mike" }
+
+f) Use o find para trazer todos os Hamsters
+    Comando: db.getCollection("exercicio_mongo").find(
+                { 
+                    "species" : "Hamster"
+                }
+            );
+    Output: { "_id" : ObjectId("5e68068c6012c8077fc4ab40"), "name" : "Mike", "species" : "Hamster" }
+
+g) Use o find para listar todos os pets com nome Mike
+    Comando: db.getCollection("exercicio_mongo").find(
+                { 
+                    "name" : "Mike"
+                }
+            );
+    Output: { "_id" : ObjectId("5e68068c6012c8077fc4ab40"), "name" : "Mike", "species" : "Hamster" }
+            { "_id" : ObjectId("5e6807136012c8077fc4ab43"), "name" : "Mike", "species" : "Cachorro" }
+
+h) Liste apenas o documento que é um Cachorro chamado Mike
+    Comando:db.getCollection("exercicio_mongo").find(
+                { 
+                    "name" : "Mike", 
+                    "species" : "Cachorro"
+                }
+            );
+    Output: { "_id" : ObjectId("5e6807136012c8077fc4ab43"), "name" : "Mike", "species" : "Cachorro" }
+
+Exercicio 2 - Mama mia!
+
+a) Liste/Conte todas as pessoas que tem exatamente 99 anos. Você pode usar um count para indicar a quantidade.
+    Comando: db.getCollection("italians").aggregate(
+                [
+                    { 
+                        "$match" : { 
+                            "age" : NumberLong(99)
+                        }
+                    }, 
+                    { 
+                        "$group" : { 
+                            "_id" : { 
+
+                            }, 
+                            "COUNT(*)" : { 
+                                "$sum" : NumberInt(1)
+                            }
+                        }
+                    }, 
+                    { 
+                        "$project" : { 
+                            "COUNT(*)" : "$COUNT(*)", 
+                            "_id" : NumberInt(0)
+                        }
+                    }
+                ], 
+                { 
+                    "allowDiskUse" : true
+                }
+            );
+    Output: Não houve retorno, pois não há nenhum registro com idade igual a 99 anos
+
+b) Identifique quantas pessoas são elegíveis atendimento prioritário (pessoas com mais de 65 anos)
+    Comando: db.getCollection("italians").aggregate(
+                [
+                    { 
+                        "$match" : { 
+                            "age" : { 
+                                "$gt" : NumberLong(65)
+                            }
+                        }
+                    }, 
+                    { 
+                        "$group" : { 
+                            "_id" : { 
+
+                            }, 
+                            "COUNT(*)" : { 
+                                "$sum" : NumberInt(1)
+                            }
+                        }
+                    }, 
+                    { 
+                        "$project" : { 
+                            "COUNT(*)" : "$COUNT(*)", 
+                            "_id" : NumberInt(0)
+                        }
+                    }
+                ], 
+                { 
+                    "allowDiskUse" : true
+                }
+            );
+    Output: { "COUNT(*)" : 1723 }
+
+c) Identifique todos os jovens (pessoas entre 12 a 18 anos)
+    Comando: db.getCollection("italians").aggregate(
+                [
+                    { 
+                        "$match" : { 
+                            "$and" : [
+                                { 
+                                    "age" : { 
+                                        "$gte" : NumberLong(12)
+                                    }
+                                }, 
+                                { 
+                                    "age" : { 
+                                        "$lte" : NumberLong(18)
+                                    }
+                                }
+                            ]
+                        }
+                    }, 
+                    { 
+                        "$group" : { 
+                            "_id" : { 
+
+                            }, 
+                            "COUNT(*)" : { 
+                                "$sum" : NumberInt(1)
+                            }
+                        }
+                    }, 
+                    { 
+                        "$project" : { 
+                            "COUNT(*)" : "$COUNT(*)", 
+                            "_id" : NumberInt(0)
+                        }
+                    }
+                ], 
+                { 
+                    "allowDiskUse" : true
+                }
+            );
+    Output: { "COUNT(*)" : 863 }
+
+d) Identifique quantas pessoas tem gatos, quantas tem cachorro e quantas não tem nenhum dos dois
+    d.1) Tem gatos
+        Comando: db.getCollection("italians").aggregate(
+                    [
+                        { 
+                            "$match" : { 
+                                "cat" : { 
+                                    "$ne" : null
+                                }
+                            }
+                        }, 
+                        { 
+                            "$group" : { 
+                                "_id" : { 
+
+                                }, 
+                                "COUNT(*)" : { 
+                                    "$sum" : NumberInt(1)
+                                }
+                            }
+                        }, 
+                        { 
+                            "$project" : { 
+                                "COUNT(*)" : "$COUNT(*)", 
+                                "_id" : NumberInt(0)
+                            }
+                        }
+                    ], 
+                    { 
+                        "allowDiskUse" : true
+                    }
+                );
+        Output: { "COUNT(*)" : 6047 }
+    
+    d.2) Tem cachorro  
+        Comando: db.getCollection("italians").aggregate(
+                    [
+                        { 
+                            "$match" : { 
+                                "dog" : { 
+                                    "$ne" : null
+                                }
+                            }
+                        }, 
+                        { 
+                            "$group" : { 
+                                "_id" : { 
+
+                                }, 
+                                "COUNT(*)" : { 
+                                    "$sum" : NumberInt(1)
+                                }
+                            }
+                        }, 
+                        { 
+                            "$project" : { 
+                                "COUNT(*)" : "$COUNT(*)", 
+                                "_id" : NumberInt(0)
+                            }
+                        }
+                    ], 
+                    { 
+                        "allowDiskUse" : true
+                    }
+                );
+        Output: { "COUNT(*)" : 4053 }
+    
+    d.3) Não tem nenhum dos dois
+        Comando: db.getCollection("italians").aggregate(
+                    [
+                        { 
+                            "$match" : { 
+                                "dog" : null, 
+                                "cat" : null
+                            }
+                        }, 
+                        { 
+                            "$group" : { 
+                                "_id" : { 
+
+                                }, 
+                                "COUNT(*)" : { 
+                                    "$sum" : NumberInt(1)
+                                }
+                            }
+                        }, 
+                        { 
+                            "$project" : { 
+                                "COUNT(*)" : "$COUNT(*)", 
+                                "_id" : NumberInt(0)
+                            }
+                        }
+                    ], 
+                    { 
+                        "allowDiskUse" : true
+                    }
+                );
+        Output: { "COUNT(*)" : 2313 }
+
+e) Liste/Conte todas as pessoas acima de 60 anos que tenham gato
+    Comando: db.getCollection("italians").aggregate(
+                [
+                    { 
+                        "$match" : { 
+                            "cat" : { 
+                                "$ne" : null
+                            }, 
+                            "age" : { 
+                                "$gt" : NumberLong(60)
+                            }
+                        }
+                    }, 
+                    { 
+                        "$group" : { 
+                            "_id" : { 
+
+                            }, 
+                            "COUNT(*)" : { 
+                                "$sum" : NumberInt(1)
+                            }
+                        }
+                    }, 
+                    { 
+                        "$project" : { 
+                            "COUNT(*)" : "$COUNT(*)", 
+                            "_id" : NumberInt(0)
+                        }
+                    }
+                ], 
+                { 
+                    "allowDiskUse" : true
+                }
+            );
+    Output: { "COUNT(*)" : 1403 }
+
+f) Liste/Conte todos os jovens com cachorro
+    Comando: db.getCollection("italians").aggregate(
+                [
+                    { 
+                        "$match" : { 
+                            "$and" : [
+                                { 
+                                    "age" : { 
+                                        "$gt" : NumberLong(12)
+                                    }
+                                }, 
+                                { 
+                                    "age" : { 
+                                        "$lt" : NumberLong(18)
+                                    }
+                                }, 
+                                { 
+                                    "dog" : { 
+                                        "$ne" : null
+                                    }
+                                }
+                            ]
+                        }
+                    }, 
+                    { 
+                        "$group" : { 
+                            "_id" : { 
+
+                            }, 
+                            "COUNT(*)" : { 
+                                "$sum" : NumberInt(1)
+                            }
+                        }
+                    }, 
+                    { 
+                        "$project" : { 
+                            "COUNT(*)" : "$COUNT(*)", 
+                            "_id" : NumberInt(0)
+                        }
+                    }
+                ], 
+                { 
+                    "allowDiskUse" : true
+                }
+            );
+    Output: { "COUNT(*)" : 249 }
+
+g) Utilizando o $where, liste todas as pessoas que tem gato e cachorro
+    Comando: db.getCollection("italians").find( { $where: "this.cat == this.dog" } );
+    Output: { "_id" : ObjectId("5e680f09bdf084d4fe00aa91"), "firstname" : "Elena", "surname" : "Morelli", "username" : "user108", "age" : 52, "email" : "Elena.Morelli@uol.com.br", "bloodType" : "B-", "id_num" : "412035262818", "registerDate" : ISODate("2018-06-24T14:13:26.346Z"), "ticketNumber" : 9813, "jobs" : [ "História da Arte" ], "favFruits" : [ "Uva" ], "movies" : [ { "title" : "Um Estranho no Ninho (1975)", "rating" : 2.36 }, { "title" : "Seven: Os Sete Crimes Capitais (1995)", "rating" : 2.18 }, { "title" : "A Felicidade Não se Compra (1946)", "rating" : 3.21 }, { "title" : "O Senhor dos Anéis: As Duas Torres (2002)", "rating" : 2.34 } ], "father" : { "firstname" : "Mauro", "surname" : "Morelli", "age" : 69 } }
+            { "_id" : ObjectId("5e680f09bdf084d4fe00aa94"), "firstname" : "Giorgio", "surname" : "Martini", "username" : "user111", "age" : 53, "email" : "Giorgio.Martini@uol.com.br", "bloodType" : "A+", "id_num" : "557403120263", "registerDate" : ISODate("2014-12-27T09:42:44.979Z"), "ticketNumber" : 1582, "jobs" : [ "Música", "Automação Industrial" ], "favFruits" : [ "Goiaba" ], "movies" : [ { "title" : "1917 (2019)", "rating" : 1.67 }, { "title" : "Seven: Os Sete Crimes Capitais (1995)", "rating" : 3.06 } ], "father" : { "firstname" : "Michele", "surname" : "Martini", "age" : 82 } }
+            { "_id" : ObjectId("5e680f09bdf084d4fe00aa9d"), "firstname" : "Paola", "surname" : "Moretti", "username" : "user120", "age" : 58, "email" : "Paola.Moretti@uol.com.br", "bloodType" : "O+", "id_num" : "321741781434", "registerDate" : ISODate("2014-07-26T17:20:56.106Z"), "ticketNumber" : 1544, "jobs" : [ "Engenharia de Telecomunicações", "Mineração" ], "favFruits" : [ "Mamão", "Laranja" ], "movies" : [ { "title" : "Intocáveis (2011)", "rating" : 4.86 }, { "title" : "Parasita (2019)", "rating" : 0.81 } ] }
+            { "_id" : ObjectId("5e680f09bdf084d4fe00aaa1"), "firstname" : "Massimiliano", "surname" : "Bruno", "username" : "user124", "age" : 33, "email" : "Massimiliano.Bruno@hotmail.com", "bloodType" : "A+", "id_num" : "571355141687", "registerDate" : ISODate("2016-06-03T05:55:44.953Z"), "ticketNumber" : 9229, "jobs" : [ "Processos Gerenciais", "Segurança da Informação" ], "favFruits" : [ "Tangerina" ], "movies" : [ { "title" : "Clube da Luta (1999)", "rating" : 4.05 }, { "title" : "Guerra nas Estrelas (1977)", "rating" : 3.64 } ], "father" : { "firstname" : "Pasquale", "surname" : "Bruno", "age" : 59 } }
+            { "_id" : ObjectId("5e680f09bdf084d4fe00aaa6"), "firstname" : "Fabio", "surname" : "Martino", "username" : "user129", "age" : 51, "email" : "Fabio.Martino@gmail.com", "bloodType" : "O-", "id_num" : "620503231120", "registerDate" : ISODate("2008-05-16T02:41:05.882Z"), "ticketNumber" : 3600, "jobs" : [ "Saúde Coletiva", "Aquicultura" ], "favFruits" : [ "Melancia" ], "movies" : [ { "title" : "O Senhor dos Anéis: A Sociedade do Anel (2001)", "rating" : 2.51 }, { "title" : "Os Bons Companheiros (1990)", "rating" : 2.18 }, { "title" : "12 Homens e uma Sentença (1957)", "rating" : 2.19 }, { "title" : "Um Sonho de Liberdade (1994)", "rating" : 1.59 } ] }
+            { "_id" : ObjectId("5e680f09bdf084d4fe00aaaa"), "firstname" : "Giuseppe", "surname" : "Rinaldi", "username" : "user133", "age" : 60, "email" : "Giuseppe.Rinaldi@hotmail.com", "bloodType" : "A-", "id_num" : "743700166226", "registerDate" : ISODate("2014-01-02T00:58:11.310Z"), "ticketNumber" : 3185, "jobs" : [ "Segurança Pública" ], "favFruits" : [ "Uva" ], "movies" : [ { "title" : "O Senhor dos Anéis: As Duas Torres (2002)", "rating" : 4.56 }, { "title" : "Coringa (2019)", "rating" : 0.21 }, { "title" : "Gladiador (2000)", "rating" : 2.46 }, { "title" : "Star Wars, Episódio V: O Império Contra-Ataca (1980)", "rating" : 0.03 }, { "title" : "À Espera de um Milagre (1999)", "rating" : 0.76 } ], "father" : { "firstname" : "Filipo", "surname" : "Rinaldi", "age" : 80 } }
+            { "_id" : ObjectId("5e680f09bdf084d4fe00aab2"), "firstname" : "Massimiliano", "surname" : "Carbone", "username" : "user141", "age" : 79, "email" : "Massimiliano.Carbone@outlook.com", "bloodType" : "B+", "id_num" : "722188088526", "registerDate" : ISODate("2008-07-11T13:34:22.847Z"), "ticketNumber" : 878, "jobs" : [ "Ciências do Consumo" ], "favFruits" : [ "Laranja", "Banana", "Banana" ], "movies" : [ { "title" : "O Senhor dos Anéis: A Sociedade do Anel (2001)", "rating" : 4.07 }, { "title" : "Vingadores: Ultimato (2019)", "rating" : 4.47 }, { "title" : "A Viagem de Chihiro (2001)", "rating" : 0.95 }, { "title" : "Os Sete Samurais (1954)", "rating" : 1.14 }, { "title" : "Forrest Gump: O Contador de Histórias (1994)", "rating" : 1.12 } ] }
+            { "_id" : ObjectId("5e680f09bdf084d4fe00aab9"), "firstname" : "Monica", "surname" : "Bianchi", "username" : "user148", "age" : 75, "email" : "Monica.Bianchi@hotmail.com", "bloodType" : "O-", "id_num" : "074230823766", "registerDate" : ISODate("2016-12-25T23:03:18.417Z"), "ticketNumber" : 9711, "jobs" : [ "Engenharia de Petróleo" ], "favFruits" : [ "Tangerina" ], "movies" : [ { "title" : "Forrest Gump: O Contador de Histórias (1994)", "rating" : 2.16 }, { "title" : "Forrest Gump: O Contador de Histórias (1994)", "rating" : 1.81 }, { "title" : "Guerra nas Estrelas (1977)", "rating" : 0.86 } ] }
+            { "_id" : ObjectId("5e680f09bdf084d4fe00aabe"), "firstname" : "Eleonora", "surname" : "Rossetti", "username" : "user153", "age" : 65, "email" : "Eleonora.Rossetti@outlook.com", "bloodType" : "O-", "id_num" : "371332656418", "registerDate" : ISODate("2017-05-07T09:50:10.758Z"), "ticketNumber" : 3467, "jobs" : [ "Artes Visuais", "Oftálmica" ], "favFruits" : [ "Tangerina", "Mamão" ], "movies" : [ { "title" : "Vingadores: Ultimato (2019)", "rating" : 1.23 } ] }
+            { "_id" : ObjectId("5e680f09bdf084d4fe00aabf"), "firstname" : "Raffaele", "surname" : "Barone", "username" : "user154", "age" : 70, "email" : "Raffaele.Barone@outlook.com", "bloodType" : "B+", "id_num" : "038325858573", "registerDate" : ISODate("2008-06-12T07:51:31.692Z"), "ticketNumber" : 5478, "jobs" : [ "Logística" ], "favFruits" : [ "Uva", "Goiaba", "Tangerina" ], "movies" : [ { "title" : "O Poderoso Chefão (1972)", "rating" : 1.06 }, { "title" : "Gladiador (2000)", "rating" : 0.93 } ] }
+            { "_id" : ObjectId("5e680f09bdf084d4fe00aac0"), "firstname" : "Barbara", "surname" : "Rossi", "username" : "user155", "age" : 53, "email" : "Barbara.Rossi@uol.com.br", "bloodType" : "AB-", "id_num" : "087132455586", "registerDate" : ISODate("2020-02-08T09:16:09.910Z"), "ticketNumber" : 9552, "jobs" : [ "Secretariado Executivo" ], "favFruits" : [ "Melancia", "Maçã" ], "movies" : [ { "title" : "A Origem (2010)", "rating" : 4.03 }, { "title" : "O Poderoso Chefão (1972)", "rating" : 2.03 }, { "title" : "O Poderoso Chefão II (1974)", "rating" : 0.45 } ] }
+            { "_id" : ObjectId("5e680f0abdf084d4fe00aad6"), "firstname" : "Simona", "surname" : "D’Amico", "username" : "user177", "age" : 18, "email" : "Simona.D’Amico@gmail.com", "bloodType" : "O-", "id_num" : "427331767776", "registerDate" : ISODate("2015-09-04T21:53:04.774Z"), "ticketNumber" : 296, "jobs" : [ "Agroecologia", "Ciências Agrárias" ], "favFruits" : [ "Mamão" ], "movies" : [ { "title" : "Três Homens em Conflito (1966)", "rating" : 3.64 }, { "title" : "Os Bons Companheiros (1990)", "rating" : 4.05 }, { "title" : "Clube da Luta (1999)", "rating" : 3.41 }, { "title" : "O Senhor dos Anéis: O Retorno do Rei (2003)", "rating" : 2.14 }, { "title" : "A Origem (2010)", "rating" : 2.82 } ] }
+            { "_id" : ObjectId("5e680f0abdf084d4fe00aad7"), "firstname" : "Enrico", "surname" : "Caruso", "username" : "user178", "age" : 49, "email" : "Enrico.Caruso@live.com", "bloodType" : "B-", "id_num" : "445184744814", "registerDate" : ISODate("2018-04-05T08:38:55.452Z"), "ticketNumber" : 1201, "jobs" : [ "Jornalismo" ], "favFruits" : [ "Kiwi", "Kiwi", "Mamão" ], "movies" : [ { "title" : "Interestelar (2014)", "rating" : 3.74 }, { "title" : "Pulp Fiction: Tempo de Violência (1994)", "rating" : 1.82 }, { "title" : "A Vida é Bela (1997)", "rating" : 2.45 }, { "title" : "Harakiri (1962)", "rating" : 0.61 }, { "title" : "O Silêncio dos Inocentes (1991)", "rating" : 1.57 } ] }
+            { "_id" : ObjectId("5e680f0abdf084d4fe00aadb"), "firstname" : "Domenico", "surname" : "Gentile", "username" : "user182", "age" : 77, "email" : "Domenico.Gentile@yahoo.com", "bloodType" : "A-", "id_num" : "525781452480", "registerDate" : ISODate("2007-08-12T14:07:38.378Z"), "ticketNumber" : 7478, "jobs" : [ "Engenharia Agrícola" ], "favFruits" : [ "Kiwi", "Kiwi", "Laranja" ], "movies" : [ { "title" : "Três Homens em Conflito (1966)", "rating" : 0.62 }, { "title" : "A Lista de Schindler (1993)", "rating" : 2.21 }, { "title" : "Guerra nas Estrelas (1977)", "rating" : 2.64 }, { "title" : "O Silêncio dos Inocentes (1991)", "rating" : 1.14 } ] }
+            { "_id" : ObjectId("5e680f0abdf084d4fe00aade"), "firstname" : "Michela", "surname" : "De Angelis", "username" : "user185", "age" : 58, "email" : "Michela.De Angelis@uol.com.br", "bloodType" : "B-", "id_num" : "741027142744", "registerDate" : ISODate("2018-01-21T06:51:35.035Z"), "ticketNumber" : 5404, "jobs" : [ "Gestão da Produção Industrial" ], "favFruits" : [ "Banana", "Mamão", "Uva" ], "movies" : [ { "title" : "Clube da Luta (1999)", "rating" : 4.83 }, { "title" : "A Felicidade Não se Compra (1946)", "rating" : 0.06 }, { "title" : "Parasita (2019)", "rating" : 4.89 }, { "title" : "Cidade de Deus (2002)", "rating" : 4.6 } ] }
+            { "_id" : ObjectId("5e680f0abdf084d4fe00aae2"), "firstname" : "Sonia", "surname" : "Messina", "username" : "user189", "age" : 39, "email" : "Sonia.Messina@yahoo.com", "bloodType" : "B+", "id_num" : "728403621332", "registerDate" : ISODate("2011-07-15T23:01:07.080Z"), "ticketNumber" : 9114, "jobs" : [ "Ciência e Tecnologia" ], "favFruits" : [ "Melancia" ], "movies" : [ { "title" : "Gladiador (2000)", "rating" : 3.64 } ] }
+            { "_id" : ObjectId("5e680f0abdf084d4fe00aaed"), "firstname" : "Federica", "surname" : "De Luca", "username" : "user200", "age" : 64, "email" : "Federica.De Luca@live.com", "bloodType" : "O+", "id_num" : "857881084248", "registerDate" : ISODate("2010-06-17T06:06:44.792Z"), "ticketNumber" : 2318, "jobs" : [ "Eventos", "Redes de Computadores" ], "favFruits" : [ "Pêssego" ], "movies" : [ { "title" : "O Senhor dos Anéis: A Sociedade do Anel (2001)", "rating" : 4 } ] }
+            { "_id" : ObjectId("5e680f0abdf084d4fe00aaf2"), "firstname" : "Monica", "surname" : "Ferrara", "username" : "user205", "age" : 44, "email" : "Monica.Ferrara@gmail.com", "bloodType" : "AB-", "id_num" : "008080301364", "registerDate" : ISODate("2016-02-25T23:05:51.655Z"), "ticketNumber" : 3082, "jobs" : [ "Saúde e Bem-estar", "Construção Civil" ], "favFruits" : [ "Tangerina" ], "movies" : [ { "title" : "A Viagem de Chihiro (2001)", "rating" : 2.39 }, { "title" : "Um Estranho no Ninho (1975)", "rating" : 0.13 }, { "title" : "O Senhor dos Anéis: O Retorno do Rei (2003)", "rating" : 1.07 }, { "title" : "O Poderoso Chefão II (1974)", "rating" : 3.2 } ] }
+            { "_id" : ObjectId("5e680f0abdf084d4fe00aaf3"), "firstname" : "Giuseppe", "surname" : "Sanna", "username" : "user206", "age" : 67, "email" : "Giuseppe.Sanna@outlook.com", "bloodType" : "A+", "id_num" : "367838774045", "registerDate" : ISODate("2016-07-11T00:25:23.647Z"), "ticketNumber" : 2876, "jobs" : [ "Mecatrônica Industrial", "Astronomia" ], "favFruits" : [ "Kiwi", "Laranja", "Kiwi" ], "movies" : [ { "title" : "O Silêncio dos Inocentes (1991)", "rating" : 1.01 } ] }
+            { "_id" : ObjectId("5e680f0abdf084d4fe00aaf7"), "firstname" : "Alessandra", "surname" : "Lombardo", "username" : "user210", "age" : 53, "email" : "Alessandra.Lombardo@outlook.com", "bloodType" : "AB+", "id_num" : "186305383255", "registerDate" : ISODate("2017-11-08T20:15:07.283Z"), "ticketNumber" : 1886, "jobs" : [ "Agronegócios e Agropecuária", "Gestão de Turismo" ], "favFruits" : [ "Maçã", "Mamão", "Maçã" ], "movies" : [ { "title" : "Cidade de Deus (2002)", "rating" : 1.3 }, { "title" : "Coringa (2019)", "rating" : 4.85 }, { "title" : "12 Homens e uma Sentença (1957)", "rating" : 0.03 }, { "title" : "Três Homens em Conflito (1966)", "rating" : 1.54 }, { "title" : "A Viagem de Chihiro (2001)", "rating" : 4.34 } ] }
+            Type "it" for more
+
+h) Liste todas as pessoas mais novas que seus respectivos gatos.
+    Comando: db.getCollection("italians").find( { $where: "this.cat && this.age > this.cat.age" } );
+    Output: { "_id" : ObjectId("5e680f09bdf084d4fe00aa89"), "firstname" : "Ilaria", "surname" : "Martinelli", "username" : "user100", "age" : 34, "email" : "Ilaria.Martinelli@yahoo.com", "bloodType" : "O-", "id_num" : "052483747272", "registerDate" : ISODate("2013-10-22T07:27:24.790Z"), "ticketNumber" : 1013, "jobs" : [ "Sistemas Embarcados", "Teologia" ], "favFruits" : [ "Pêssego", "Kiwi" ], "movies" : [ { "title" : "O Senhor dos Anéis: O Retorno do Rei (2003)", "rating" : 4.71 }, { "title" : "Batman: O Cavaleiro das Trevas (2008)", "rating" : 4.61 }, { "title" : "Vingadores: Ultimato (2019)", "rating" : 1.79 } ], "cat" : { "name" : "Davide", "age" : 8 }, "dog" : { "name" : "Elisa", "age" : 14 } }
+            { "_id" : ObjectId("5e680f09bdf084d4fe00aa8a"), "firstname" : "Massimiliano", "surname" : "Mariani", "username" : "user101", "age" : 50, "email" : "Massimiliano.Mariani@live.com", "bloodType" : "A-", "id_num" : "637560181156", "registerDate" : ISODate("2019-08-16T07:48:36.313Z"), "ticketNumber" : 2456, "jobs" : [ "Biotecnologia e Bioquímica", "Energias Renováveis" ], "favFruits" : [ "Maçã", "Maçã" ], "movies" : [ { "title" : "O Poderoso Chefão (1972)", "rating" : 2.41 }, { "title" : "Forrest Gump: O Contador de Histórias (1994)", "rating" : 2.07 }, { "title" : "Os Bons Companheiros (1990)", "rating" : 3.37 } ], "cat" : { "name" : "Emanuela", "age" : 15 }, "dog" : { "name" : "Federico", "age" : 2 } }
+            { "_id" : ObjectId("5e680f09bdf084d4fe00aa8b"), "firstname" : "Alessandra", "surname" : "Ricci", "username" : "user102", "age" : 78, "email" : "Alessandra.Ricci@yahoo.com", "bloodType" : "B-", "id_num" : "321078734765", "registerDate" : ISODate("2008-08-11T13:03:03.633Z"), "ticketNumber" : 3809, "jobs" : [ "Silvicultura", "Secretariado" ], "favFruits" : [ "Pêssego" ], "movies" : [ { "title" : "A Viagem de Chihiro (2001)", "rating" : 0.41 }, { "title" : "Parasita (2019)", "rating" : 0.97 }, { "title" : "O Poderoso Chefão II (1974)", "rating" : 2.58 }, { "title" : "A Lista de Schindler (1993)", "rating" : 0.35 } ], "cat" : { "name" : "Tiziana", "age" : 5 }, "dog" : { "name" : "Elena", "age" : 13 } }
+            { "_id" : ObjectId("5e680f09bdf084d4fe00aa8d"), "firstname" : "Filipo", "surname" : "Sartori", "username" : "user104", "age" : 63, "email" : "Filipo.Sartori@hotmail.com", "bloodType" : "A+", "id_num" : "023234308801", "registerDate" : ISODate("2012-10-27T10:26:51.077Z"), "ticketNumber" : 3854, "jobs" : [ "Engenharia de Controle e Automação", "Ciências Sociais" ], "favFruits" : [ "Tangerina", "Kiwi", "Uva" ], "movies" : [ { "title" : "Os Sete Samurais (1954)", "rating" : 3.21 }, { "title" : "Matrix (1999)", "rating" : 3.11 }, { "title" : "Forrest Gump: O Contador de Histórias (1994)", "rating" : 3.58 } ], "cat" : { "name" : "Roberta", "age" : 0 }, "dog" : { "name" : "Fabrizio", "age" : 10 } }
+            { "_id" : ObjectId("5e680f09bdf084d4fe00aa8e"), "firstname" : "Elena", "surname" : "Longo", "username" : "user105", "age" : 67, "email" : "Elena.Longo@uol.com.br", "bloodType" : "B-", "id_num" : "815451034226", "registerDate" : ISODate("2008-07-12T23:09:27.900Z"), "ticketNumber" : 3036, "jobs" : [ "Secretariado" ], "favFruits" : [ "Goiaba", "Goiaba", "Mamão" ], "movies" : [ { "title" : "Coringa (2019)", "rating" : 1.72 }, { "title" : "Gladiador (2000)", "rating" : 2.02 }, { "title" : "Forrest Gump: O Contador de Histórias (1994)", "rating" : 3.59 } ], "cat" : { "name" : "Sonia", "age" : 3 }, "dog" : { "name" : "Domenico", "age" : 11 } }
+            { "_id" : ObjectId("5e680f09bdf084d4fe00aa8f"), "firstname" : "Filipo", "surname" : "Negri", "username" : "user106", "age" : 23, "email" : "Filipo.Negri@outlook.com", "bloodType" : "A+", "id_num" : "584031502635", "registerDate" : ISODate("2010-11-25T12:16:24.585Z"), "ticketNumber" : 5881, "jobs" : [ "Fotografia" ], "favFruits" : [ "Melancia", "Laranja" ], "movies" : [ { "title" : "Gladiador (2000)", "rating" : 4.82 } ], "father" : { "firstname" : "Mirko", "surname" : "Negri", "age" : 45 }, "cat" : { "name" : "Eleonora", "age" : 10 } }
+            { "_id" : ObjectId("5e680f09bdf084d4fe00aa92"), "firstname" : "Michela", "surname" : "Morelli", "username" : "user109", "age" : 18, "email" : "Michela.Morelli@hotmail.com", "bloodType" : "O-", "id_num" : "638644314834", "registerDate" : ISODate("2010-04-24T20:37:51.148Z"), "ticketNumber" : 1984, "jobs" : [ "Sistemas de Informação", "Construção Civil" ], "favFruits" : [ "Tangerina" ], "movies" : [ { "title" : "O Senhor dos Anéis: As Duas Torres (2002)", "rating" : 1.59 } ], "cat" : { "name" : "Federico", "age" : 6 } }
+            { "_id" : ObjectId("5e680f09bdf084d4fe00aa93"), "firstname" : "Massimiliano", "surname" : "Neri", "username" : "user110", "age" : 66, "email" : "Massimiliano.Neri@live.com", "bloodType" : "AB-", "id_num" : "607161466830", "registerDate" : ISODate("2007-07-26T02:52:04.526Z"), "ticketNumber" : 7095, "jobs" : [ "Medicina Veterinária" ], "favFruits" : [ "Goiaba" ], "movies" : [ { "title" : "Pulp Fiction: Tempo de Violência (1994)", "rating" : 3.26 }, { "title" : "Seven: Os Sete Crimes Capitais (1995)", "rating" : 4.82 }, { "title" : "Forrest Gump: O Contador de Histórias (1994)", "rating" : 4.39 }, { "title" : "A Lista de Schindler (1993)", "rating" : 0.13 } ], "cat" : { "name" : "Riccardo", "age" : 13 } }
+            { "_id" : ObjectId("5e680f09bdf084d4fe00aa95"), "firstname" : "Marta", "surname" : "Barone", "username" : "user112", "age" : 41, "email" : "Marta.Barone@hotmail.com", "bloodType" : "O-", "id_num" : "028322681756", "registerDate" : ISODate("2018-10-21T15:04:47.328Z"), "ticketNumber" : 2994, "jobs" : [ "Ciência e Tecnologia" ], "favFruits" : [ "Goiaba" ], "movies" : [ { "title" : "Star Wars, Episódio V: O Império Contra-Ataca (1980)", "rating" : 4.79 }, { "title" : "1917 (2019)", "rating" : 2.21 } ], "cat" : { "name" : "Sabrina", "age" : 10 } }
+            { "_id" : ObjectId("5e680f09bdf084d4fe00aa97"), "firstname" : "Paola", "surname" : "Messina", "username" : "user114", "age" : 61, "email" : "Paola.Messina@uol.com.br", "bloodType" : "B+", "id_num" : "770047054658", "registerDate" : ISODate("2017-09-15T05:14:11.079Z"), "ticketNumber" : 8626, "jobs" : [ "Serviços Judiciários e Notariais", "Estudos de Gênero e Diversidade" ], "favFruits" : [ "Mamão" ], "movies" : [ { "title" : "1917 (2019)", "rating" : 1.11 }, { "title" : "Coringa (2019)", "rating" : 2.14 } ], "father" : { "firstname" : "Silvia", "surname" : "Messina", "age" : 100 }, "cat" : { "name" : "Sabrina", "age" : 0 } }
+            { "_id" : ObjectId("5e680f09bdf084d4fe00aa98"), "firstname" : "Sonia", "surname" : "De Santis", "username" : "user115", "age" : 74, "email" : "Sonia.De Santis@gmail.com", "bloodType" : "AB-", "id_num" : "616173812008", "registerDate" : ISODate("2012-05-27T02:15:09.929Z"), "ticketNumber" : 1032, "jobs" : [ "Gestão em Saúde", "Gestão da Tecnologia da Informação" ], "favFruits" : [ "Melancia", "Uva" ], "movies" : [ { "title" : "Star Wars, Episódio V: O Império Contra-Ataca (1980)", "rating" : 2.01 }, { "title" : "A Vida é Bela (1997)", "rating" : 4.82 }, { "title" : "A Vida é Bela (1997)", "rating" : 0.56 } ], "cat" : { "name" : "Valentina", "age" : 10 } }
+            { "_id" : ObjectId("5e680f09bdf084d4fe00aa9a"), "firstname" : "Elisa", "surname" : "Grassi", "username" : "user117", "age" : 42, "email" : "Elisa.Grassi@hotmail.com", "bloodType" : "O+", "id_num" : "817125745722", "registerDate" : ISODate("2016-10-24T11:29:17.307Z"), "ticketNumber" : 4794, "jobs" : [ "Gestão Desportiva e de Lazer", "Engenharia de Segurança no Trabalho" ], "favFruits" : [ "Tangerina", "Mamão" ], "movies" : [ { "title" : "Gladiador (2000)", "rating" : 0.15 }, { "title" : "Um Sonho de Liberdade (1994)", "rating" : 2.32 }, { "title" : "Harakiri (1962)", "rating" : 1.17 }, { "title" : "À Espera de um Milagre (1999)", "rating" : 4.07 } ], "cat" : { "name" : "Maria", "age" : 16 }, "dog" : { "name" : "Chiara", "age" : 12 } }
+            { "_id" : ObjectId("5e680f09bdf084d4fe00aa9c"), "firstname" : "Raffaele", "surname" : "Montanari", "username" : "user119", "age" : 68, "email" : "Raffaele.Montanari@outlook.com", "bloodType" : "AB+", "id_num" : "723680630277", "registerDate" : ISODate("2011-07-06T01:01:30.778Z"), "ticketNumber" : 7946, "jobs" : [ "Direito" ], "favFruits" : [ "Mamão", "Laranja" ], "movies" : [ { "title" : "O Senhor dos Anéis: O Retorno do Rei (2003)", "rating" : 0.41 }, { "title" : "1917 (2019)", "rating" : 1.04 } ], "cat" : { "name" : "Lucia", "age" : 0 } }
+            { "_id" : ObjectId("5e680f09bdf084d4fe00aa9e"), "firstname" : "Anna", "surname" : "Benedetti", "username" : "user121", "age" : 18, "email" : "Anna.Benedetti@live.com", "bloodType" : "AB-", "id_num" : "331754702344", "registerDate" : ISODate("2013-04-18T08:19:01.637Z"), "ticketNumber" : 2522, "jobs" : [ "Engenharia e Produção" ], "favFruits" : [ "Mamão", "Banana" ], "movies" : [ { "title" : "Seven: Os Sete Crimes Capitais (1995)", "rating" : 4.4 }, { "title" : "O Resgate do Soldado Ryan (1998)", "rating" : 0.4 } ], "cat" : { "name" : "Claudia", "age" : 15 }, "dog" : { "name" : "Giacomo", "age" : 0 } }
+            { "_id" : ObjectId("5e680f09bdf084d4fe00aa9f"), "firstname" : "Simona", "surname" : "Mancini", "username" : "user122", "age" : 18, "email" : "Simona.Mancini@uol.com.br", "bloodType" : "A+", "id_num" : "828808060825", "registerDate" : ISODate("2014-09-18T01:53:40.151Z"), "ticketNumber" : 9196, "jobs" : [ "Sistemas de Informação" ], "favFruits" : [ "Melancia", "Laranja", "Banana" ], "movies" : [ { "title" : "O Senhor dos Anéis: A Sociedade do Anel (2001)", "rating" : 2.82 }, { "title" : "O Senhor dos Anéis: O Retorno do Rei (2003)", "rating" : 0.71 }, { "title" : "Forrest Gump: O Contador de Histórias (1994)", "rating" : 1.38 }, { "title" : "A Vida é Bela (1997)", "rating" : 0.94 } ], "cat" : { "name" : "Roberta", "age" : 3 }, "dog" : { "name" : "Antonio", "age" : 11 } }
+            { "_id" : ObjectId("5e680f09bdf084d4fe00aaa3"), "firstname" : "Claudio", "surname" : "Marchetti", "username" : "user126", "age" : 62, "email" : "Claudio.Marchetti@outlook.com", "bloodType" : "A+", "id_num" : "054815550625", "registerDate" : ISODate("2010-03-16T03:26:00.036Z"), "ticketNumber" : 7219, "jobs" : [ "Engenharia Elétrica", "História" ], "favFruits" : [ "Tangerina", "Melancia" ], "movies" : [ { "title" : "O Senhor dos Anéis: O Retorno do Rei (2003)", "rating" : 2.97 }, { "title" : "O Poderoso Chefão (1972)", "rating" : 2.57 }, { "title" : "Os Bons Companheiros (1990)", "rating" : 3.97 }, { "title" : "Matrix (1999)", "rating" : 3.79 } ], "cat" : { "name" : "Giusy", "age" : 5 } }
+            { "_id" : ObjectId("5e680f09bdf084d4fe00aaa5"), "firstname" : "Filipo", "surname" : "Serra", "username" : "user128", "age" : 53, "email" : "Filipo.Serra@gmail.com", "bloodType" : "A-", "id_num" : "605317521764", "registerDate" : ISODate("2014-11-15T12:13:20.458Z"), "ticketNumber" : 135, "jobs" : [ "Gestão Hospitalar", "Sistemas de Informação" ], "favFruits" : [ "Goiaba", "Banana", "Maçã" ], "movies" : [ { "title" : "Intocáveis (2011)", "rating" : 1.09 }, { "title" : "Parasita (2019)", "rating" : 0.49 }, { "title" : "A Felicidade Não se Compra (1946)", "rating" : 1.83 }, { "title" : "O Resgate do Soldado Ryan (1998)", "rating" : 2.42 }, { "title" : "Pulp Fiction: Tempo de Violência (1994)", "rating" : 1.05 } ], "cat" : { "name" : "Patrizia", "age" : 4 } }
+            { "_id" : ObjectId("5e680f09bdf084d4fe00aaa7"), "firstname" : "Emanuele", "surname" : "Bianco", "username" : "user130", "age" : 56, "email" : "Emanuele.Bianco@gmail.com", "bloodType" : "A+", "id_num" : "664641167228", "registerDate" : ISODate("2012-07-13T20:39:13.001Z"), "ticketNumber" : 5988, "jobs" : [ "Engenharia de Transporte e da Mobilidade", "Engenharia de Transporte e da Mobilidade" ], "favFruits" : [ "Tangerina", "Goiaba" ], "movies" : [ { "title" : "Pulp Fiction: Tempo de Violência (1994)", "rating" : 1.27 }, { "title" : "Batman: O Cavaleiro das Trevas (2008)", "rating" : 1.73 }, { "title" : "1917 (2019)", "rating" : 2.59 }, { "title" : "A Viagem de Chihiro (2001)", "rating" : 2.67 } ], "cat" : { "name" : "Giovanna", "age" : 9 } }
+            { "_id" : ObjectId("5e680f09bdf084d4fe00aaa8"), "firstname" : "Roberta", "surname" : "Ricci", "username" : "user131", "age" : 31, "email" : "Roberta.Ricci@gmail.com", "bloodType" : "A+", "id_num" : "183810782558", "registerDate" : ISODate("2015-05-16T06:50:24.635Z"), "ticketNumber" : 995, "jobs" : [ "Engenharia Aeronáutica", "Quiropraxia" ], "favFruits" : [ "Kiwi", "Kiwi" ], "movies" : [ { "title" : "Vingadores: Ultimato (2019)", "rating" : 2.02 }, { "title" : "O Poderoso Chefão (1972)", "rating" : 4.48 }, { "title" : "Clube da Luta (1999)", "rating" : 1.08 }, { "title" : "Matrix (1999)", "rating" : 1.6 } ], "cat" : { "name" : "Mirko", "age" : 8 }, "dog" : { "name" : "Luca", "age" : 12 } }
+            { "_id" : ObjectId("5e680f09bdf084d4fe00aaa9"), "firstname" : "Antonella", "surname" : "Benedetti", "username" : "user132", "age" : 27, "email" : "Antonella.Benedetti@hotmail.com", "bloodType" : "AB+", "id_num" : "305477126262", "registerDate" : ISODate("2014-10-23T14:46:27.446Z"), "ticketNumber" : 9655, "jobs" : [ "Letras", "Papel e Celulose" ], "favFruits" : [ "Mamão" ], "movies" : [ { "title" : "Pulp Fiction: Tempo de Violência (1994)", "rating" : 3.24 }, { "title" : "Guerra nas Estrelas (1977)", "rating" : 3.2 }, { "title" : "Parasita (2019)", "rating" : 0.59 } ], "mother" : { "firstname" : "Alex", "surname" : "Benedetti", "age" : 45 }, "cat" : { "name" : "Anna", "age" : 1 }, "dog" : { "name" : "Cinzia", "age" : 6 } }
+            Type "it" for more
+
+i) Liste as pessoas que tem o mesmo nome que seu bichano (gatou ou cachorro)
+    Comando: db.getCollection("italians").find( { $where: "this.cat && this.firstname == this.cat.name || this.dog && this.firstname == this.dog.name" } );
+    Output: { "_id" : ObjectId("5e680f0abdf084d4fe00ab3a"), "firstname" : "Stefano", "surname" : "Fiore", "username" : "user277", "age" : 52, "email" : "Stefano.Fiore@live.com", "bloodType" : "A-", "id_num" : "386275515723", "registerDate" : ISODate("2015-10-31T06:56:03.932Z"), "ticketNumber" : 8248, "jobs" : [ "Gestão Hospitalar", "Musicoterapia" ], "favFruits" : [ "Pêssego", "Laranja" ], "movies" : [ { "title" : "Cidade de Deus (2002)", "rating" : 3.87 }, { "title" : "12 Homens e uma Sentença (1957)", "rating" : 1.56 }, { "title" : "Um Estranho no Ninho (1975)", "rating" : 4.85 } ], "cat" : { "name" : "Stefano", "age" : 13 } }
+            { "_id" : ObjectId("5e680f0abdf084d4fe00ab76"), "firstname" : "Tiziana", "surname" : "Giordano", "username" : "user337", "age" : 64, "email" : "Tiziana.Giordano@gmail.com", "bloodType" : "B+", "id_num" : "767213445213", "registerDate" : ISODate("2016-12-04T00:34:38.216Z"), "ticketNumber" : 8577, "jobs" : [ "Mineração", "Gestão Ambiental" ], "favFruits" : [ "Maçã", "Maçã", "Tangerina" ], "movies" : [ { "title" : "O Resgate do Soldado Ryan (1998)", "rating" : 4.17 }, { "title" : "Seven: Os Sete Crimes Capitais (1995)", "rating" : 2.18 }, { "title" : "Batman: O Cavaleiro das Trevas (2008)", "rating" : 1.27 }, { "title" : "Um Sonho de Liberdade (1994)", "rating" : 2.42 } ], "cat" : { "name" : "Tiziana", "age" : 10 } }
+            { "_id" : ObjectId("5e680f0abdf084d4fe00abb4"), "firstname" : "Elena", "surname" : "Montanari", "username" : "user399", "age" : 24, "email" : "Elena.Montanari@live.com", "bloodType" : "A+", "id_num" : "321526613345", "registerDate" : ISODate("2011-08-13T20:41:30.406Z"), "ticketNumber" : 5565, "jobs" : [ "Ciências Naturais e Exatas", "Fisioterapia" ], "favFruits" : [ "Maçã" ], "movies" : [ { "title" : "Star Wars, Episódio V: O Império Contra-Ataca (1980)", "rating" : 4.24 } ], "cat" : { "name" : "Monica", "age" : 7 }, "dog" : { "name" : "Elena", "age" : 9 } }
+            { "_id" : ObjectId("5e680f0abdf084d4fe00ac0e"), "firstname" : "Lucia", "surname" : "Ruggiero", "username" : "user489", "age" : 72, "email" : "Lucia.Ruggiero@uol.com.br", "bloodType" : "A+", "id_num" : "212565653606", "registerDate" : ISODate("2014-07-08T08:03:33.734Z"), "ticketNumber" : 2308, "jobs" : [ "Gestão da Produção Industrial", "Ciências do Consumo" ], "favFruits" : [ "Uva", "Mamão", "Uva" ], "movies" : [ { "title" : "Coringa (2019)", "rating" : 2.04 }, { "title" : "Três Homens em Conflito (1966)", "rating" : 1.03 }, { "title" : "Intocáveis (2011)", "rating" : 1.21 } ], "cat" : { "name" : "Lucia", "age" : 9 } }
+            { "_id" : ObjectId("5e680f0abdf084d4fe00ac83"), "firstname" : "Maria", "surname" : "Morelli", "username" : "user606", "age" : 21, "email" : "Maria.Morelli@outlook.com", "bloodType" : "AB+", "id_num" : "413825674400", "registerDate" : ISODate("2014-10-04T13:28:47.414Z"), "ticketNumber" : 972, "jobs" : [ "Ciências Biológicas" ], "favFruits" : [ "Tangerina", "Kiwi", "Mamão" ], "movies" : [ { "title" : "Seven: Os Sete Crimes Capitais (1995)", "rating" : 1.8 }, { "title" : "Um Estranho no Ninho (1975)", "rating" : 4.32 }, { "title" : "Star Wars, Episódio V: O Império Contra-Ataca (1980)", "rating" : 3.19 }, { "title" : "Seven: Os Sete Crimes Capitais (1995)", "rating" : 0.97 }, { "title" : "O Senhor dos Anéis: O Retorno do Rei (2003)", "rating" : 4.42 } ], "cat" : { "name" : "Maria", "age" : 10 }, "dog" : { "name" : "Roberto", "age" : 7 } }
+            { "_id" : ObjectId("5e680f0bbdf084d4fe00ad90"), "firstname" : "Alberto", "surname" : "Valentini", "username" : "user875", "age" : 78, "email" : "Alberto.Valentini@live.com", "bloodType" : "O+", "id_num" : "587700116567", "registerDate" : ISODate("2019-04-09T11:16:16.876Z"), "ticketNumber" : 8647, "jobs" : [ "Estatística", "Nanotecnologia" ], "favFruits" : [ "Goiaba" ], "movies" : [ { "title" : "Gladiador (2000)", "rating" : 2.43 }, { "title" : "Os Bons Companheiros (1990)", "rating" : 2.73 } ], "cat" : { "name" : "Eleonora", "age" : 17 }, "dog" : { "name" : "Alberto", "age" : 5 } }
+            { "_id" : ObjectId("5e680f0bbdf084d4fe00ae22"), "firstname" : "Giacomo", "surname" : "Caruso", "username" : "user1021", "age" : 46, "email" : "Giacomo.Caruso@live.com", "bloodType" : "O-", "id_num" : "534713477456", "registerDate" : ISODate("2013-08-17T06:12:24.663Z"), "ticketNumber" : 5197, "jobs" : [ "Engenharia de Alimentos" ], "favFruits" : [ "Kiwi" ], "movies" : [ { "title" : "Os Bons Companheiros (1990)", "rating" : 3.01 }, { "title" : "A Viagem de Chihiro (2001)", "rating" : 0.35 }, { "title" : "Os Sete Samurais (1954)", "rating" : 0.25 }, { "title" : "1917 (2019)", "rating" : 3.59 }, { "title" : "Gladiador (2000)", "rating" : 4.76 } ], "cat" : { "name" : "Giacomo", "age" : 4 } }
+            { "_id" : ObjectId("5e680f0bbdf084d4fe00ae59"), "firstname" : "Carlo", "surname" : "Carbone", "username" : "user1076", "age" : 27, "email" : "Carlo.Carbone@uol.com.br", "bloodType" : "A+", "id_num" : "084684187161", "registerDate" : ISODate("2010-08-11T16:19:12.980Z"), "ticketNumber" : 9318, "jobs" : [ "Secretariado Executivo" ], "favFruits" : [ "Mamão" ], "movies" : [ { "title" : "Star Wars, Episódio V: O Império Contra-Ataca (1980)", "rating" : 1.4 }, { "title" : "Harakiri (1962)", "rating" : 1.38 }, { "title" : "Pulp Fiction: Tempo de Violência (1994)", "rating" : 4.71 } ], "dog" : { "name" : "Carlo", "age" : 7 } }
+            { "_id" : ObjectId("5e680f0bbdf084d4fe00ae71"), "firstname" : "Manuela", "surname" : "Ricci", "username" : "user1100", "age" : 70, "email" : "Manuela.Ricci@yahoo.com", "bloodType" : "O-", "id_num" : "566112813128", "registerDate" : ISODate("2013-04-07T23:14:14.073Z"), "ticketNumber" : 2673, "jobs" : [ "Gestão da Qualidade" ], "favFruits" : [ "Uva", "Kiwi" ], "movies" : [ { "title" : "Matrix (1999)", "rating" : 4.67 } ], "dog" : { "name" : "Manuela", "age" : 10 } }
+            { "_id" : ObjectId("5e680f0bbdf084d4fe00ae9b"), "firstname" : "Valentina", "surname" : "Bernardi", "username" : "user1142", "age" : 19, "email" : "Valentina.Bernardi@live.com", "bloodType" : "O+", "id_num" : "020852030824", "registerDate" : ISODate("2018-02-13T03:47:53.702Z"), "ticketNumber" : 999, "jobs" : [ "Produção Cultural" ], "favFruits" : [ "Kiwi", "Goiaba" ], "movies" : [ { "title" : "A Felicidade Não se Compra (1946)", "rating" : 1.21 }, { "title" : "A Viagem de Chihiro (2001)", "rating" : 0.25 }, { "title" : "Os Bons Companheiros (1990)", "rating" : 2.18 }, { "title" : "Pulp Fiction: Tempo de Violência (1994)", "rating" : 0.09 }, { "title" : "O Senhor dos Anéis: A Sociedade do Anel (2001)", "rating" : 3.68 } ], "cat" : { "name" : "Valentina", "age" : 17 } }
+            { "_id" : ObjectId("5e680f0bbdf084d4fe00aea9"), "firstname" : "Stefania", "surname" : "Pagano", "username" : "user1156", "age" : 18, "email" : "Stefania.Pagano@outlook.com", "bloodType" : "AB+", "id_num" : "334524587786", "registerDate" : ISODate("2018-09-10T20:36:59.783Z"), "ticketNumber" : 6429, "jobs" : [ "Marketing", "Ciências Naturais e Exatas" ], "favFruits" : [ "Goiaba", "Pêssego", "Laranja" ], "movies" : [ { "title" : "A Lista de Schindler (1993)", "rating" : 4.09 }, { "title" : "Seven: Os Sete Crimes Capitais (1995)", "rating" : 1.14 }, { "title" : "Cidade de Deus (2002)", "rating" : 0.11 }, { "title" : "Os Bons Companheiros (1990)", "rating" : 3.47 }, { "title" : "O Silêncio dos Inocentes (1991)", "rating" : 2.6 } ], "mother" : { "firstname" : "Federica", "surname" : "Pagano", "age" : 43 }, "cat" : { "name" : "Fabrizio", "age" : 14 }, "dog" : { "name" : "Stefania", "age" : 1 } }
+            { "_id" : ObjectId("5e680f0bbdf084d4fe00aed5"), "firstname" : "Michele", "surname" : "Lombardo", "username" : "user1200", "age" : 7, "email" : "Michele.Lombardo@gmail.com", "bloodType" : "B-", "id_num" : "884624506446", "registerDate" : ISODate("2008-08-27T05:43:39.044Z"), "ticketNumber" : 9004, "jobs" : [ "Produção Editorial", "Engenharia Industrial Madeireira" ], "favFruits" : [ "Banana", "Melancia", "Maçã" ], "movies" : [ { "title" : "Os Sete Samurais (1954)", "rating" : 0.26 }, { "title" : "Clube da Luta (1999)", "rating" : 1.69 }, { "title" : "Harakiri (1962)", "rating" : 3.96 } ], "cat" : { "name" : "Michele", "age" : 12 } }
+            { "_id" : ObjectId("5e680f0bbdf084d4fe00aeec"), "firstname" : "Sergio", "surname" : "Ferrari", "username" : "user1223", "age" : 74, "email" : "Sergio.Ferrari@yahoo.com", "bloodType" : "AB-", "id_num" : "012050728152", "registerDate" : ISODate("2016-02-13T17:05:10.735Z"), "ticketNumber" : 3963, "jobs" : [ "Engenharia Naval" ], "favFruits" : [ "Mamão" ], "movies" : [ { "title" : "Batman: O Cavaleiro das Trevas (2008)", "rating" : 1.05 } ], "dog" : { "name" : "Sergio", "age" : 3 } }
+            { "_id" : ObjectId("5e680f0bbdf084d4fe00af62"), "firstname" : "Salvatore", "surname" : "Pellegrino", "username" : "user1341", "age" : 12, "email" : "Salvatore.Pellegrino@outlook.com", "bloodType" : "AB+", "id_num" : "444123810887", "registerDate" : ISODate("2015-01-29T00:21:58.010Z"), "ticketNumber" : 7731, "jobs" : [ "Engenharia de Telecomunicações", "Produção Cultural" ], "favFruits" : [ "Melancia", "Pêssego", "Melancia" ], "movies" : [ { "title" : "Os Bons Companheiros (1990)", "rating" : 1.97 }, { "title" : "À Espera de um Milagre (1999)", "rating" : 0.8 }, { "title" : "Guerra nas Estrelas (1977)", "rating" : 3.26 }, { "title" : "12 Homens e uma Sentença (1957)", "rating" : 1.95 } ], "cat" : { "name" : "Alessio", "age" : 4 }, "dog" : { "name" : "Salvatore", "age" : 16 } }
+            { "_id" : ObjectId("5e680f0bbdf084d4fe00af7c"), "firstname" : "Valentina", "surname" : "Damico", "username" : "user1367", "age" : 66, "email" : "Valentina.Damico@outlook.com", "bloodType" : "AB-", "id_num" : "561648673203", "registerDate" : ISODate("2018-08-17T14:02:04.240Z"), "ticketNumber" : 3767, "jobs" : [ "Energias Renováveis", "Sistemas de Telecomunicações" ], "favFruits" : [ "Laranja" ], "movies" : [ { "title" : "A Lista de Schindler (1993)", "rating" : 3.78 } ], "father" : { "firstname" : "Angela", "surname" : "Damico", "age" : 95 }, "dog" : { "name" : "Valentina", "age" : 10 } }
+            { "_id" : ObjectId("5e680f0cbdf084d4fe00b038"), "firstname" : "Alessio", "surname" : "Giuliani", "username" : "user1555", "age" : 63, "email" : "Alessio.Giuliani@uol.com.br", "bloodType" : "A+", "id_num" : "203182852520", "registerDate" : ISODate("2018-07-12T16:33:04.147Z"), "ticketNumber" : 1668, "jobs" : [ "Defesa e Gestão Estratégica Internacional", "Psicopedagogia" ], "favFruits" : [ "Melancia" ], "movies" : [ { "title" : "A Origem (2010)", "rating" : 3.12 }, { "title" : "O Senhor dos Anéis: A Sociedade do Anel (2001)", "rating" : 1.48 }, { "title" : "O Poderoso Chefão II (1974)", "rating" : 2.67 } ], "cat" : { "name" : "Maurizio", "age" : 15 }, "dog" : { "name" : "Alessio", "age" : 9 } }
+            { "_id" : ObjectId("5e680f0cbdf084d4fe00b083"), "firstname" : "Giorgio", "surname" : "D’Angelo", "username" : "user1630", "age" : 53, "email" : "Giorgio.D’Angelo@yahoo.com", "bloodType" : "AB-", "id_num" : "853045302787", "registerDate" : ISODate("2009-08-25T21:23:56.659Z"), "ticketNumber" : 2714, "jobs" : [ "Pedagogia", "Farmácia" ], "favFruits" : [ "Goiaba", "Tangerina" ], "movies" : [ { "title" : "O Senhor dos Anéis: As Duas Torres (2002)", "rating" : 0.28 }, { "title" : "Harakiri (1962)", "rating" : 0.76 }, { "title" : "A Felicidade Não se Compra (1946)", "rating" : 3.82 }, { "title" : "1917 (2019)", "rating" : 3.93 }, { "title" : "Star Wars, Episódio V: O Império Contra-Ataca (1980)", "rating" : 3.6 } ], "cat" : { "name" : "Giorgio", "age" : 16 }, "dog" : { "name" : "Michele", "age" : 8 } }
+            { "_id" : ObjectId("5e680f0cbdf084d4fe00b122"), "firstname" : "Elisabetta", "surname" : "Neri", "username" : "user1789", "age" : 73, "email" : "Elisabetta.Neri@gmail.com", "bloodType" : "B+", "id_num" : "311880768230", "registerDate" : ISODate("2016-11-22T11:24:54.688Z"), "ticketNumber" : 8161, "jobs" : [ "Filosofia", "Fabricação Mecânica" ], "favFruits" : [ "Goiaba", "Kiwi", "Goiaba" ], "movies" : [ { "title" : "Vingadores: Ultimato (2019)", "rating" : 4.2 }, { "title" : "Forrest Gump: O Contador de Histórias (1994)", "rating" : 0.34 }, { "title" : "Gladiador (2000)", "rating" : 0.53 }, { "title" : "Gladiador (2000)", "rating" : 1.33 } ], "cat" : { "name" : "Elisabetta", "age" : 0 }, "dog" : { "name" : "Marta", "age" : 1 } }
+            { "_id" : ObjectId("5e680f0cbdf084d4fe00b162"), "firstname" : "Emanuele", "surname" : "Milani", "username" : "user1853", "age" : 29, "email" : "Emanuele.Milani@uol.com.br", "bloodType" : "A+", "id_num" : "602273355253", "registerDate" : ISODate("2012-07-07T02:22:19.679Z"), "ticketNumber" : 7968, "jobs" : [ "Jogos Digitais" ], "favFruits" : [ "Kiwi", "Uva", "Melancia" ], "movies" : [ { "title" : "O Silêncio dos Inocentes (1991)", "rating" : 0.83 }, { "title" : "Os Sete Samurais (1954)", "rating" : 4.65 }, { "title" : "Coringa (2019)", "rating" : 1.8 }, { "title" : "Três Homens em Conflito (1966)", "rating" : 4.72 } ], "cat" : { "name" : "Emanuele", "age" : 17 } }
+            { "_id" : ObjectId("5e680f0cbdf084d4fe00b173"), "firstname" : "Mario", "surname" : "Colombo", "username" : "user1870", "age" : 59, "email" : "Mario.Colombo@yahoo.com", "bloodType" : "AB-", "id_num" : "410133813678", "registerDate" : ISODate("2014-03-29T19:53:00.124Z"), "ticketNumber" : 2810, "jobs" : [ "Sistemas Embarcados" ], "favFruits" : [ "Mamão", "Mamão" ], "movies" : [ { "title" : "Clube da Luta (1999)", "rating" : 1.54 }, { "title" : "Os Bons Companheiros (1990)", "rating" : 3.37 } ], "mother" : { "firstname" : "Fabio", "surname" : "Colombo", "age" : 74 }, "dog" : { "name" : "Mario", "age" : 5 } }
+            Type "it" for more
+
+j) Projete apenas o nome e sobrenomedas pessoas com tipo de sangue de fator RH negativo
+    Comando: db.getCollection("italians").find(
+                { 
+                    "bloodType" : { 
+                        "$regex" : /\w{1,2}-/i
+                    }
+                }, 
+                { 
+                    "firstname" : "$firstname", 
+                    "surname" : "$surname", 
+                    "_id" : NumberInt(0)
+                }
+            );
+    Output: { "firstname" : "Ilaria", "surname" : "Martinelli" }
+            { "firstname" : "Massimiliano", "surname" : "Mariani" }
+            { "firstname" : "Alessandra", "surname" : "Ricci" }
+            { "firstname" : "Sabrina", "surname" : "Leone" }
+            { "firstname" : "Elena", "surname" : "Longo" }
+            { "firstname" : "Lucia", "surname" : "Farina" }
+            { "firstname" : "Elena", "surname" : "Morelli" }
+            { "firstname" : "Michela", "surname" : "Morelli" }
+            { "firstname" : "Massimiliano", "surname" : "Neri" }
+            { "firstname" : "Marta", "surname" : "Barone" }
+            { "firstname" : "Emanuele", "surname" : "Fabbri" }
+            { "firstname" : "Sonia", "surname" : "De Santis" }
+            { "firstname" : "Paolo", "surname" : "Testa" }
+            { "firstname" : "Anna", "surname" : "Benedetti" }
+            { "firstname" : "Sabrina", "surname" : "Moretti" }
+            { "firstname" : "Filipo", "surname" : "Serra" }
+            { "firstname" : "Fabio", "surname" : "Martino" }
+            { "firstname" : "Giuseppe", "surname" : "Rinaldi" }
+            { "firstname" : "Daniele", "surname" : "Silvestri" }
+            { "firstname" : "Elisabetta", "surname" : "Mazza" }
+            Type "it" for more
+
+k) Projete apenas os animais dos italianos. Devem ser listados os animais com nome e idade. Não mostre o identificado do mongo (ObjectId)
+    Comando: db.getCollection("italians").find(
+                { 
+                    "cat" : { 
+                        "$ne" : null
+                    }, 
+                    "dog" : { 
+                        "$ne" : null
+                    }
+                }, 
+                { 
+                    "cat.name" : "$cat.name", 
+                    "cat.age" : "$cat.age", 
+                    "dog.name" : "$dog.name", 
+                    "dog.age" : "$dog.age", 
+                    "_id" : NumberInt(0)
+                }
+            );
+    Output: { "cat" : { "name" : "Davide", "age" : 8 }, "dog" : { "name" : "Elisa", "age" : 14 } }
+            { "cat" : { "name" : "Emanuela", "age" : 15 }, "dog" : { "name" : "Federico", "age" : 2 } }
+            { "cat" : { "name" : "Tiziana", "age" : 5 }, "dog" : { "name" : "Elena", "age" : 13 } }
+            { "cat" : { "name" : "Roberta", "age" : 0 }, "dog" : { "name" : "Fabrizio", "age" : 10 } }
+            { "cat" : { "name" : "Sonia", "age" : 3 }, "dog" : { "name" : "Domenico", "age" : 11 } }
+            { "cat" : { "name" : "Giusy", "age" : 16 }, "dog" : { "name" : "Patrizia", "age" : 0 } }
+            { "cat" : { "name" : "Maria", "age" : 16 }, "dog" : { "name" : "Chiara", "age" : 12 } }
+            { "cat" : { "name" : "Claudia", "age" : 15 }, "dog" : { "name" : "Giacomo", "age" : 0 } }
+            { "cat" : { "name" : "Roberta", "age" : 3 }, "dog" : { "name" : "Antonio", "age" : 11 } }
+            { "cat" : { "name" : "Mirko", "age" : 8 }, "dog" : { "name" : "Luca", "age" : 12 } }
+            { "cat" : { "name" : "Anna", "age" : 1 }, "dog" : { "name" : "Cinzia", "age" : 6 } }
+            { "cat" : { "name" : "Alessandra", "age" : 14 }, "dog" : { "name" : "Giorgio", "age" : 5 } }
+            { "cat" : { "name" : "Ilaria", "age" : 17 }, "dog" : { "name" : "Simona", "age" : 6 } }
+            { "cat" : { "name" : "Martina", "age" : 15 }, "dog" : { "name" : "Mirko", "age" : 11 } }
+            { "cat" : { "name" : "Angelo", "age" : 17 }, "dog" : { "name" : "Fabrizio", "age" : 12 } }
+            { "cat" : { "name" : "Simone", "age" : 14 }, "dog" : { "name" : "Laura", "age" : 9 } }
+            { "cat" : { "name" : "Sara", "age" : 11 }, "dog" : { "name" : "Ilaria", "age" : 6 } }
+            { "cat" : { "name" : "Fabrizio", "age" : 15 }, "dog" : { "name" : "Lucia", "age" : 4 } }
+            { "cat" : { "name" : "Raffaele", "age" : 8 }, "dog" : { "name" : "Carlo", "age" : 13 } }
+            { "cat" : { "name" : "Emanuele", "age" : 8 }, "dog" : { "name" : "Tiziana", "age" : 1 } }
+            Type "it" for more
+
+l) Quais são as 5 pessoas mais velhas com sobrenome Rossi?
+    Comando:db.getCollection("italians").find(
+                { 
+                    "surname" : "Rossi"
+                }, 
+                { 
+                    "firstname" : "$firstname", 
+                    "surname" : "$surname", 
+                    "age" : "$age", 
+                    "_id" : NumberInt(0)
+                }
+            ).sort(
+                { 
+                    "age" : NumberInt(-1)
+                }
+            ).limit(5);
+    Output: { "firstname" : "Massimo", "surname" : "Rossi", "age" : 79 }
+            { "firstname" : "Elisabetta", "surname" : "Rossi", "age" : 77 }
+            { "firstname" : "Sonia", "surname" : "Rossi", "age" : 76 }
+            { "firstname" : "Andrea", "surname" : "Rossi", "age" : 71 }
+            { "firstname" : "Giorgio", "surname" : "Rossi", "age" : 70 }
+
+m) Crie um italiano que tenha um leão como animal de estimação. Associe um nome e idade ao bichano
+    Comando: db.getCollection("italians").insert({ 
+                "firstname" : "Emanuele", 
+                "surname" : "Bianco", 
+                "username" : "user130", 
+                "age" : 56.0, 
+                "email" : "Emanuele.Bianco@gmail.com", 
+                "bloodType" : "A+", 
+                "id_num" : "664641167228", 
+                "registerDate" : ISODate("2012-07-13T20:39:13.001+0000"), 
+                "ticketNumber" : 5988.0, 
+                "jobs" : [
+                    "Engenharia de Transporte e da Mobilidade", 
+                    "Engenharia de Transporte e da Mobilidade"
+                ], 
+                "favFruits" : [
+                    "Tangerina", 
+                    "Goiaba"
+                ], 
+                "movies" : [
+                    {
+                        "title" : "Pulp Fiction: Tempo de Violência (1994)", 
+                        "rating" : 1.27
+                    }, 
+                    {
+                        "title" : "Batman: O Cavaleiro das Trevas (2008)", 
+                        "rating" : 1.73
+                    }, 
+                    {
+                        "title" : "1917 (2019)", 
+                        "rating" : 2.59
+                    }, 
+                    {
+                        "title" : "A Viagem de Chihiro (2001)", 
+                        "rating" : 2.67
+                    }
+                ], 
+                "lion" : {
+                    "name" : "Alex", 
+                    "age" : 15.0
+                }
+            });
+    Output: riteResult({ "nInserted" : 1 })
+
+n) Infelizmente o Leão comeu o italiano. Remova essa pessoa usando o Id
+    Comando: db.getCollection("italians").remove({"_id": ObjectId("5e68237aa148741caf077843")})
+    Output: WriteResult({ "nRemoved" : 1 })
+
+o) Passou um ano. Atualize a idade de todos os italianos e dos bichanos em 1
+    Comando: db.getCollection("italians").update( { }, { "$inc": { "age": 1 } }, { multi: true } );
+             db.getCollection("italians").update( { "cat": { "$exists": true } }, { "$inc": { "cat.age": 1 } },{ multi: true } );
+             db.getCollection("italians").update( { "dog": { "$exists": true } }, { "$inc": { "dog.age": 1 } },{ multi: true } );
+    Output: WriteResult({ "nMatched" : 10000, "nUpserted" : 0, "nModified" : 10000 })
+            WriteResult({ "nMatched" : 6047, "nUpserted" : 0, "nModified" : 6047 })
+            WriteResult({ "nMatched" : 4053, "nUpserted" : 0, "nModified" : 4053 })
+
+p) O Corona Vírus chegou na Itália e misteriosamente atingiu pessoas somente com gatos e de 66 anos. Remova esses italianos
+    Comando: db.getCollection("italians").remove(
+                { 
+                    "age" : NumberLong(66), 
+                    "cat" : { 
+                        "$ne" : null
+                    }
+                }
+            );
+    Output: WriteResult({ "nRemoved" : 76 })
+
+q) Utilizando o framework agregate, liste apenas as pessoas com nomes iguais a sua respectiva mãe e que tenha gato ou cachorro
+    Comando: db.getCollection("italians").aggregate(
+            [
+                {
+                    "$match":
+                    {
+                        "$and": 
+                        [
+                            {
+                                mother:
+                                {
+                                    $exists:1
+                                }
+                            }, 
+                            {
+                                "$or": 
+                                [
+                                    {
+                                        dog:
+                                        {
+                                            $exists:1
+                                        }
+                                    }, 
+                                    {
+                                        cat:
+                                        {
+                                            $exists:1
+                                        }
+                                    }
+                                ]
+                            }
+                    ]
+                    }
+                },
+                {
+                    "$addFields": 
+                    { 
+                        isEqual: 
+                        {
+                            "$cmp":
+                                [
+                                    "$firstname","$mother.firstname"
+                                ]
+                        }
+                    }
+                },
+                {
+                    "$match":
+                        {
+                            "isEqual":0
+                        }
+                }
+            ])
+    Output: { "_id" : ObjectId("5e680f09bdf084d4fe00aaba"), "firstname" : "Federica", "surname" : "Martino", "username" : "user149", "age" : 46, "email" : "Federica.Martino@live.com", "bloodType" : "A+", "id_num" : "448576806861", "registerDate" : ISODate("2008-09-04T15:29:20.386Z"), "ticketNumber" : 3823, "jobs" : [ "Turismo", "Comércio Exterior" ], "favFruits" : [ "Mamão" ], "movies" : [ { "title" : "O Poderoso Chefão (1972)", "rating" : 1.94 }, { "title" : "Um Sonho de Liberdade (1994)", "rating" : 2.51 }, { "title" : "Coringa (2019)", "rating" : 3.17 }, { "title" : "Star Wars, Episódio V: O Império Contra-Ataca (1980)", "rating" : 4.47 }, { "title" : "Seven: Os Sete Crimes Capitais (1995)", "rating" : 2.32 } ], "mother" : { "firstname" : "Federica", "surname" : "Martino", "age" : 61 }, "father" : { "firstname" : "Nicola", "surname" : "Martino", "age" : 61 }, "cat" : { "name" : "Laura", "age" : 15 }, "isEqual" : 0 }
+            { "_id" : ObjectId("5e680f0abdf084d4fe00ab22"), "firstname" : "Barbara", "surname" : "D’Angelo", "username" : "user253", "age" : 13, "email" : "Barbara.D’Angelo@uol.com.br", "bloodType" : "B-", "id_num" : "551578812417", "registerDate" : ISODate("2007-08-29T12:11:12.979Z"), "ticketNumber" : 2886, "jobs" : [ "Comunicação Institucional" ], "favFruits" : [ "Banana", "Tangerina", "Mamão" ], "movies" : [ { "title" : "Três Homens em Conflito (1966)", "rating" : 4.21 }, { "title" : "Harakiri (1962)", "rating" : 0.05 }, { "title" : "A Lista de Schindler (1993)", "rating" : 1.76 }, { "title" : "O Resgate do Soldado Ryan (1998)", "rating" : 4.24 } ], "mother" : { "firstname" : "Barbara", "surname" : "D’Angelo", "age" : 37 }, "dog" : { "name" : "Daniela", "age" : 14 }, "isEqual" : 0 }
+            { "_id" : ObjectId("5e680f0abdf084d4fe00abc5"), "firstname" : "Lorenzo", "surname" : "Fontana", "username" : "user416", "age" : 33, "email" : "Lorenzo.Fontana@live.com", "bloodType" : "AB-", "id_num" : "650880644382", "registerDate" : ISODate("2016-08-30T16:58:03.965Z"), "ticketNumber" : 9679, "jobs" : [ "Engenharia Mecatrônica" ], "favFruits" : [ "Goiaba" ], "movies" : [ { "title" : "Matrix (1999)", "rating" : 1.33 }, { "title" : "Pulp Fiction: Tempo de Violência (1994)", "rating" : 4.54 }, { "title" : "O Senhor dos Anéis: A Sociedade do Anel (2001)", "rating" : 3.19 }, { "title" : "Star Wars, Episódio V: O Império Contra-Ataca (1980)", "rating" : 0.64 }, { "title" : "Os Sete Samurais (1954)", "rating" : 0.79 } ], "mother" : { "firstname" : "Lorenzo", "surname" : "Fontana", "age" : 64 }, "father" : { "firstname" : "Elena", "surname" : "Fontana", "age" : 67 }, "cat" : { "name" : "Giovanni", "age" : 14 }, "dog" : { "name" : "Domenico", "age" : 18 }, "isEqual" : 0 }
+            { "_id" : ObjectId("5e680f0cbdf084d4fe00b0c1"), "firstname" : "Patrizia", "surname" : "Sala", "username" : "user1692", "age" : 60, "email" : "Patrizia.Sala@outlook.com", "bloodType" : "A+", "id_num" : "273840205663", "registerDate" : ISODate("2008-09-05T00:03:13.577Z"), "ticketNumber" : 3376, "jobs" : [ "Irrigação e Drenagem", "Engenharia Têxtil" ], "favFruits" : [ "Goiaba" ], "movies" : [ { "title" : "Seven: Os Sete Crimes Capitais (1995)", "rating" : 3.05 }, { "title" : "Gladiador (2000)", "rating" : 2.31 }, { "title" : "Coringa (2019)", "rating" : 4.89 } ], "mother" : { "firstname" : "Patrizia", "surname" : "Sala", "age" : 87 }, "cat" : { "name" : "Martina", "age" : 13 }, "isEqual" : 0 }
+            { "_id" : ObjectId("5e680f0dbdf084d4fe00b539"), "firstname" : "Federica", "surname" : "Barone", "username" : "user2836", "age" : 39, "email" : "Federica.Barone@gmail.com", "bloodType" : "A-", "id_num" : "570165151817", "registerDate" : ISODate("2009-11-01T21:25:53.366Z"), "ticketNumber" : 8720, "jobs" : [ "Saneamento Ambiental" ], "favFruits" : [ "Banana", "Melancia", "Mamão" ], "movies" : [ { "title" : "O Senhor dos Anéis: As Duas Torres (2002)", "rating" : 0.6 }, { "title" : "O Resgate do Soldado Ryan (1998)", "rating" : 4.17 }, { "title" : "12 Homens e uma Sentença (1957)", "rating" : 1.15 }, { "title" : "O Resgate do Soldado Ryan (1998)", "rating" : 4.4 }, { "title" : "A Felicidade Não se Compra (1946)", "rating" : 3.3 } ], "mother" : { "firstname" : "Federica", "surname" : "Barone", "age" : 67 }, "father" : { "firstname" : "Antonella", "surname" : "Barone", "age" : 66 }, "cat" : { "name" : "Roberto", "age" : 5 }, "dog" : { "name" : "Maurizio", "age" : 10 }, "isEqual" : 0 }
+            { "_id" : ObjectId("5e680f0fbdf084d4fe00bc5e"), "firstname" : "Maurizio", "surname" : "Benedetti", "username" : "user4665", "age" : 44, "email" : "Maurizio.Benedetti@uol.com.br", "bloodType" : "O+", "id_num" : "330101665263", "registerDate" : ISODate("2008-09-01T01:44:12.195Z"), "ticketNumber" : 3310, "jobs" : [ "Luteria" ], "favFruits" : [ "Maçã", "Melancia" ], "movies" : [ { "title" : "O Poderoso Chefão II (1974)", "rating" : 4.29 }, { "title" : "A Vida é Bela (1997)", "rating" : 4.23 }, { "title" : "Cidade de Deus (2002)", "rating" : 0.76 } ], "mother" : { "firstname" : "Maurizio", "surname" : "Benedetti", "age" : 61 }, "father" : { "firstname" : "Riccardo", "surname" : "Benedetti", "age" : 72 }, "cat" : { "name" : "Claudia", "age" : 14 }, "isEqual" : 0 }
+            { "_id" : ObjectId("5e680f0fbdf084d4fe00bc6b"), "firstname" : "Alex", "surname" : "Grassi", "username" : "user4678", "age" : 73, "email" : "Alex.Grassi@live.com", "bloodType" : "B-", "id_num" : "041358830802", "registerDate" : ISODate("2015-03-02T08:06:52.564Z"), "ticketNumber" : 8280, "jobs" : [ "Design de Interiores" ], "favFruits" : [ "Kiwi", "Maçã" ], "movies" : [ { "title" : "O Silêncio dos Inocentes (1991)", "rating" : 4.67 }, { "title" : "O Resgate do Soldado Ryan (1998)", "rating" : 4.42 } ], "mother" : { "firstname" : "Alex", "surname" : "Grassi", "age" : 88 }, "cat" : { "name" : "Federico", "age" : 12 }, "dog" : { "name" : "Paola", "age" : 9 }, "isEqual" : 0 }
+            { "_id" : ObjectId("5e680f12bdf084d4fe00c204"), "firstname" : "Tiziana", "surname" : "Palmieri", "username" : "user6111", "age" : 11, "email" : "Tiziana.Palmieri@uol.com.br", "bloodType" : "B+", "id_num" : "766777277430", "registerDate" : ISODate("2007-05-18T11:58:30.027Z"), "ticketNumber" : 2329, "jobs" : [ "Fotografia" ], "favFruits" : [ "Melancia" ], "movies" : [ { "title" : "Um Sonho de Liberdade (1994)", "rating" : 0.32 }, { "title" : "A Origem (2010)", "rating" : 4.19 }, { "title" : "O Silêncio dos Inocentes (1991)", "rating" : 0.56 }, { "title" : "Cidade de Deus (2002)", "rating" : 2.17 }, { "title" : "Coringa (2019)", "rating" : 4.51 } ], "mother" : { "firstname" : "Tiziana", "surname" : "Palmieri", "age" : 38 }, "cat" : { "name" : "Giovanni", "age" : 13 }, "isEqual" : 0 }
+            { "_id" : ObjectId("5e680f12bdf084d4fe00c325"), "firstname" : "Gianluca", "surname" : "Marchetti", "username" : "user6400", "age" : 49, "email" : "Gianluca.Marchetti@live.com", "bloodType" : "AB-", "id_num" : "880177800403", "registerDate" : ISODate("2008-11-21T20:22:28.673Z"), "ticketNumber" : 5376, "jobs" : [ "Linguística" ], "favFruits" : [ "Maçã", "Kiwi", "Uva" ], "movies" : [ { "title" : "O Senhor dos Anéis: As Duas Torres (2002)", "rating" : 0.21 }, { "title" : "Batman: O Cavaleiro das Trevas (2008)", "rating" : 1.04 }, { "title" : "A Viagem de Chihiro (2001)", "rating" : 3.55 }, { "title" : "Parasita (2019)", "rating" : 4.56 } ], "mother" : { "firstname" : "Gianluca", "surname" : "Marchetti", "age" : 73 }, "father" : { "firstname" : "Maurizio", "surname" : "Marchetti", "age" : 74 }, "cat" : { "name" : "Giovanni", "age" : 13 }, "dog" : { "name" : "Simone", "age" : 18 }, "isEqual" : 0 }
+            { "_id" : ObjectId("5e680f12bdf084d4fe00c36a"), "firstname" : "Vincenzo", "surname" : "Vitale", "username" : "user6469", "age" : 49, "email" : "Vincenzo.Vitale@gmail.com", "bloodType" : "B-", "id_num" : "380611664636", "registerDate" : ISODate("2010-01-04T22:32:01.365Z"), "ticketNumber" : 139, "jobs" : [ "Gestão de Cooperativas", "Serviços Judiciários e Notariais" ], "favFruits" : [ "Mamão" ], "movies" : [ { "title" : "Intocáveis (2011)", "rating" : 0.84 }, { "title" : "Os Sete Samurais (1954)", "rating" : 0.09 }, { "title" : "Pulp Fiction: Tempo de Violência (1994)", "rating" : 4.27 } ], "mother" : { "firstname" : "Vincenzo", "surname" : "Vitale", "age" : 67 }, "dog" : { "name" : "Massimiliano", "age" : 10 }, "isEqual" : 0 }
+
+
+
+r) Utilizando aggregate framework, faça uma lista de nomes única de nomes. Faça isso usando apenas o primeiro nome
+    Comando: db.getCollection("italians").aggregate(
+                [
+                    { 
+                        "$project" : { 
+                            "firstname" : "$firstname", 
+                            "_id" : NumberInt(0)
+                        }
+                    }, 
+                    { 
+                        "$group" : { 
+                            "_id" : null, 
+                            "distinct" : { 
+                                "$addToSet" : "$$ROOT"
+                            }
+                        }
+                    }, 
+                    { 
+                        "$unwind" : { 
+                            "path" : "$distinct", 
+                            "preserveNullAndEmptyArrays" : false
+                        }
+                    }, 
+                    { 
+                        "$replaceRoot" : { 
+                            "newRoot" : "$distinct"
+                        }
+                    }
+                ], 
+                { 
+                    "allowDiskUse" : true
+                }
+            );
+    Output: { "firstname" : "Stefania" }
+            { "firstname" : "Angela" }
+            { "firstname" : "Roberto" }
+            { "firstname" : "Marco" }
+            { "firstname" : "Vincenzo" }
+            { "firstname" : "Valeira" }
+            { "firstname" : "Alberto" }
+            { "firstname" : "Monica" }
+            { "firstname" : "Giorgio" }
+            { "firstname" : "Michele" }
+            { "firstname" : "Mirko" }
+            { "firstname" : "Daniele" }
+            { "firstname" : "Veronica" }
+            { "firstname" : "Martina" }
+            { "firstname" : "Sabrina" }
+            { "firstname" : "Federico" }
+            { "firstname" : "Andrea" }
+            { "firstname" : "Pietro" }
+            { "firstname" : "Maurizio" }
+            Type "it" for more
+
+s) Agora faça a mesma lista do item acima, considerando nome completo
+    Comando: db.getCollection("italians").aggregate(
+                [
+                    { 
+                        "$project" : { 
+                            "fullname" : { $concat: [ "$firstname", " ", "$surname" ] } , 
+                            "_id" : NumberInt(0)
+                        }
+                    }, 
+                    { 
+                        "$group" : { 
+                            "_id" : null, 
+                            "distinct" : { 
+                                "$addToSet" : "$$ROOT"
+                            }
+                        }
+                    }, 
+                    { 
+                        "$unwind" : { 
+                            "path" : "$distinct", 
+                            "preserveNullAndEmptyArrays" : false
+                        }
+                    }, 
+                    { 
+                        "$replaceRoot" : { 
+                            "newRoot" : "$distinct"
+                        }
+                    }
+                ], 
+                { 
+                    "allowDiskUse" : true
+                }
+            );
+    Output: { "fullname" : "Angela Lombardo" }
+            { "fullname" : "Alessandra Fiore" }
+            { "fullname" : "Fabrizio Costatini" }
+            { "fullname" : "Stefania Conti" }
+            { "fullname" : "Ilaria Rinaldi" }
+            { "fullname" : "Roberto De Luca" }
+            { "fullname" : "Sabrina De Angelis" }
+            { "fullname" : "Antonella Costatini" }
+            { "fullname" : "Emanuele Pellegrini" }
+            { "fullname" : "Lucia Galli" }
+            { "fullname" : "Serena Serra" }
+            { "fullname" : "Anna Ferrari" }
+            { "fullname" : "Carlo Rizzo" }
+            { "fullname" : "Giorgio Grasso" }
+            { "fullname" : "Ilaria De Rosa" }
+            { "fullname" : "Daniele Orlando" }
+            { "fullname" : "Enzo  Ferretti" }
+            { "fullname" : "Domenico Grassi" }
+            { "fullname" : "Silvia D’Angelo" }
+            { "fullname" : "Anna Donati" }
+            Type "it" for more
+
+t) Procure pessoas que gosta de Banana ou Maçã, tenham cachorro ou gato, mais de 20 e menos de 60 anos
+    Comando: db.getCollection("italians").find(
+                { 
+                    "$and" : [
+                        { 
+                            "favFruits" : { 
+                                "$in" : [
+                                    "Banana", 
+                                    "Maça"
+                                ]
+                            }
+                        }, 
+                        { 
+                            "$or" : [
+                                { 
+                                    "dog" : { 
+                                        "$exists" : true
+                                    }
+                                }, 
+                                { 
+                                    "cat" : { 
+                                        "$exists" : true
+                                    }
+                                }
+                            ]
+                        }, 
+                        { 
+                            "age" : { 
+                                "$gt" : 20.0
+                            }
+                        }, 
+                        { 
+                            "age" : { 
+                                "$lt" : 60.0
+                            }
+                        }
+                    ]
+                }
+            );
+    Output: { "_id" : ObjectId("5e680f09bdf084d4fe00aaa4"), "firstname" : "Federica", "surname" : "Morelli", "username" : "user127", "age" : 34, "email" : "Federica.Morelli@gmail.com", "bloodType" : "B+", "id_num" : "446181011108", "registerDate" : ISODate("2015-05-20T07:20:44.210Z"), "ticketNumber" : 3186, "jobs" : [ "Esporte", "Ecologia" ], "favFruits" : [ "Tangerina", "Banana" ], "movies" : [ { "title" : "Pulp Fiction: Tempo de Violência (1994)", "rating" : 1.56 }, { "title" : "Vingadores: Ultimato (2019)", "rating" : 2.5 } ], "dog" : { "name" : "Cinzia", "age" : 7 } }
+            { "_id" : ObjectId("5e680f09bdf084d4fe00aaa5"), "firstname" : "Filipo", "surname" : "Serra", "username" : "user128", "age" : 54, "email" : "Filipo.Serra@gmail.com", "bloodType" : "A-", "id_num" : "605317521764", "registerDate" : ISODate("2014-11-15T12:13:20.458Z"), "ticketNumber" : 135, "jobs" : [ "Gestão Hospitalar", "Sistemas de Informação" ], "favFruits" : [ "Goiaba", "Banana", "Maçã" ], "movies" : [ { "title" : "Intocáveis (2011)", "rating" : 1.09 }, { "title" : "Parasita (2019)", "rating" : 0.49 }, { "title" : "A Felicidade Não se Compra (1946)", "rating" : 1.83 }, { "title" : "O Resgate do Soldado Ryan (1998)", "rating" : 2.42 }, { "title" : "Pulp Fiction: Tempo de Violência (1994)", "rating" : 1.05 } ], "cat" : { "name" : "Patrizia", "age" : 5 } }
+            { "_id" : ObjectId("5e680f09bdf084d4fe00aaac"), "firstname" : "Elisabetta", "surname" : "Mazza", "username" : "user135", "age" : 42, "email" : "Elisabetta.Mazza@yahoo.com", "bloodType" : "A-", "id_num" : "775721118158", "registerDate" : ISODate("2018-04-06T18:30:44.349Z"), "ticketNumber" : 75, "jobs" : [ "Comunicação Institucional" ], "favFruits" : [ "Laranja", "Banana", "Kiwi" ], "movies" : [ { "title" : "O Silêncio dos Inocentes (1991)", "rating" : 2.88 }, { "title" : "Pulp Fiction: Tempo de Violência (1994)", "rating" : 1.1 }, { "title" : "À Espera de um Milagre (1999)", "rating" : 2.89 } ], "cat" : { "name" : "Angelo", "age" : 11 } }
+            { "_id" : ObjectId("5e680f09bdf084d4fe00aab8"), "firstname" : "Rita", "surname" : "Barone", "username" : "user147", "age" : 56, "email" : "Rita.Barone@uol.com.br", "bloodType" : "O-", "id_num" : "043361758546", "registerDate" : ISODate("2007-11-18T11:52:32.224Z"), "ticketNumber" : 8881, "jobs" : [ "Gestão Desportiva e de Lazer" ], "favFruits" : [ "Banana", "Goiaba" ], "movies" : [ { "title" : "O Poderoso Chefão (1972)", "rating" : 0.38 }, { "title" : "Intocáveis (2011)", "rating" : 1.77 }, { "title" : "A Viagem de Chihiro (2001)", "rating" : 4.74 }, { "title" : "A Felicidade Não se Compra (1946)", "rating" : 4.59 } ], "dog" : { "name" : "Luigi", "age" : 1 } }
+            { "_id" : ObjectId("5e680f09bdf084d4fe00aabc"), "firstname" : "Giorgia", "surname" : "Costa", "username" : "user151", "age" : 23, "email" : "Giorgia.Costa@live.com", "bloodType" : "A-", "id_num" : "773284068863", "registerDate" : ISODate("2014-07-02T01:54:55.320Z"), "ticketNumber" : 6351, "jobs" : [ "Ciências Atuariais", "Jornalismo" ], "favFruits" : [ "Goiaba", "Banana" ], "movies" : [ { "title" : "Guerra nas Estrelas (1977)", "rating" : 4.15 }, { "title" : "Vingadores: Ultimato (2019)", "rating" : 1.01 } ], "cat" : { "name" : "Gabiele", "age" : 10 } }
+            { "_id" : ObjectId("5e680f09bdf084d4fe00aac7"), "firstname" : "Giovanna", "surname" : "Barone", "username" : "user162", "age" : 51, "email" : "Giovanna.Barone@yahoo.com", "bloodType" : "A-", "id_num" : "725046870575", "registerDate" : ISODate("2017-03-27T11:07:01.618Z"), "ticketNumber" : 6690, "jobs" : [ "Papel e Celulose" ], "favFruits" : [ "Maçã", "Banana", "Maçã" ], "movies" : [ { "title" : "Os Bons Companheiros (1990)", "rating" : 1.36 }, { "title" : "Harakiri (1962)", "rating" : 4.03 }, { "title" : "Vingadores: Ultimato (2019)", "rating" : 2.74 }, { "title" : "Star Wars, Episódio V: O Império Contra-Ataca (1980)", "rating" : 1.64 } ], "father" : { "firstname" : "Anna", "surname" : "Barone", "age" : 88 }, "cat" : { "name" : "Domenico", "age" : 18 } }
+            { "_id" : ObjectId("5e680f0abdf084d4fe00aae0"), "firstname" : "Cristian", "surname" : "Orlando", "username" : "user187", "age" : 44, "email" : "Cristian.Orlando@hotmail.com", "bloodType" : "O-", "id_num" : "865024501615", "registerDate" : ISODate("2009-02-02T17:36:12.697Z"), "ticketNumber" : 7404, "jobs" : [ "Geografia", "Engenharia Química" ], "favFruits" : [ "Banana", "Tangerina" ], "movies" : [ { "title" : "O Senhor dos Anéis: A Sociedade do Anel (2001)", "rating" : 0.86 }, { "title" : "Gladiador (2000)", "rating" : 0.09 }, { "title" : "Os Bons Companheiros (1990)", "rating" : 3.42 } ], "cat" : { "name" : "Daniele", "age" : 3 } }
+            { "_id" : ObjectId("5e680f0abdf084d4fe00ab01"), "firstname" : "Pietro", "surname" : "Silvestri", "username" : "user220", "age" : 32, "email" : "Pietro.Silvestri@outlook.com", "bloodType" : "AB-", "id_num" : "026010712202", "registerDate" : ISODate("2011-02-11T11:39:04.129Z"), "ticketNumber" : 8623, "jobs" : [ "Serviço Social", "Sistemas Biomédicos" ], "favFruits" : [ "Mamão", "Banana" ], "movies" : [ { "title" : "Batman: O Cavaleiro das Trevas (2008)", "rating" : 2.75 }, { "title" : "O Silêncio dos Inocentes (1991)", "rating" : 3.95 }, { "title" : "Clube da Luta (1999)", "rating" : 3.95 }, { "title" : "Coringa (2019)", "rating" : 0.06 } ], "father" : { "firstname" : "Nicola", "surname" : "Silvestri", "age" : 63 }, "dog" : { "name" : "Ilaria", "age" : 17 } }
+            { "_id" : ObjectId("5e680f0abdf084d4fe00ab2e"), "firstname" : "Teresa", "surname" : "Coppola", "username" : "user265", "age" : 23, "email" : "Teresa.Coppola@yahoo.com", "bloodType" : "A-", "id_num" : "683658605357", "registerDate" : ISODate("2016-06-27T18:07:47.789Z"), "ticketNumber" : 8078, "jobs" : [ "Produção Fonográfica" ], "favFruits" : [ "Kiwi", "Goiaba", "Banana" ], "movies" : [ { "title" : "Três Homens em Conflito (1966)", "rating" : 4.19 } ], "cat" : { "name" : "Marco", "age" : 11 } }
+            { "_id" : ObjectId("5e680f0abdf084d4fe00ab5f"), "firstname" : "Marco", "surname" : "Mazza", "username" : "user314", "age" : 30, "email" : "Marco.Mazza@yahoo.com", "bloodType" : "B+", "id_num" : "681017885234", "registerDate" : ISODate("2015-07-08T18:45:57.655Z"), "ticketNumber" : 610, "jobs" : [ "Museologia" ], "favFruits" : [ "Tangerina", "Banana", "Pêssego" ], "movies" : [ { "title" : "Batman: O Cavaleiro das Trevas (2008)", "rating" : 4.28 }, { "title" : "Interestelar (2014)", "rating" : 0.06 } ], "cat" : { "name" : "Pietro", "age" : 13 } }
+            { "_id" : ObjectId("5e680f0abdf084d4fe00ab67"), "firstname" : "Pietro", "surname" : "Mazza", "username" : "user322", "age" : 24, "email" : "Pietro.Mazza@gmail.com", "bloodType" : "AB+", "id_num" : "064821074863", "registerDate" : ISODate("2007-07-17T11:05:11.467Z"), "ticketNumber" : 8957, "jobs" : [ "Sistemas Biomédicos", "Engenharia de Alimentos" ], "favFruits" : [ "Banana" ], "movies" : [ { "title" : "Coringa (2019)", "rating" : 1.35 }, { "title" : "Vingadores: Ultimato (2019)", "rating" : 2.95 } ], "cat" : { "name" : "Federico", "age" : 11 } }
+            { "_id" : ObjectId("5e680f0abdf084d4fe00ab75"), "firstname" : "Mattia", "surname" : "Cattaneo", "username" : "user336", "age" : 33, "email" : "Mattia.Cattaneo@outlook.com", "bloodType" : "B+", "id_num" : "504621136655", "registerDate" : ISODate("2013-06-13T15:15:49.733Z"), "ticketNumber" : 3590, "jobs" : [ "Agrimensura", "Produção Audiovisual" ], "favFruits" : [ "Goiaba", "Banana", "Laranja" ], "movies" : [ { "title" : "Coringa (2019)", "rating" : 2.67 }, { "title" : "Parasita (2019)", "rating" : 4.27 } ], "cat" : { "name" : "Giorgio", "age" : 7 }, "dog" : { "name" : "Vincenzo", "age" : 5 } }
+            { "_id" : ObjectId("5e680f0abdf084d4fe00ab7e"), "firstname" : "Elisabetta", "surname" : "Mariani", "username" : "user345", "age" : 21, "email" : "Elisabetta.Mariani@uol.com.br", "bloodType" : "A+", "id_num" : "105738341032", "registerDate" : ISODate("2019-04-03T02:47:33.137Z"), "ticketNumber" : 7751, "jobs" : [ "Energias Renováveis", "Gestão de Recursos Humanos" ], "favFruits" : [ "Laranja", "Melancia", "Banana" ], "movies" : [ { "title" : "A Lista de Schindler (1993)", "rating" : 1.07 }, { "title" : "Vingadores: Ultimato (2019)", "rating" : 3.86 } ], "cat" : { "name" : "Mario", "age" : 6 } }
+            { "_id" : ObjectId("5e680f0abdf084d4fe00ab80"), "firstname" : "Giuseppe", "surname" : "De Rosa", "username" : "user347", "age" : 29, "email" : "Giuseppe.De Rosa@outlook.com", "bloodType" : "B-", "id_num" : "088003887181", "registerDate" : ISODate("2020-02-27T07:40:11.113Z"), "ticketNumber" : 6185, "jobs" : [ "Silvicultura", "Negócios Imobiliários" ], "favFruits" : [ "Maçã", "Mamão", "Banana" ], "movies" : [ { "title" : "O Poderoso Chefão II (1974)", "rating" : 0.72 }, { "title" : "Parasita (2019)", "rating" : 3 }, { "title" : "O Senhor dos Anéis: O Retorno do Rei (2003)", "rating" : 2.4 }, { "title" : "Pulp Fiction: Tempo de Violência (1994)", "rating" : 3.02 } ], "cat" : { "name" : "Michele", "age" : 17 } }
+            { "_id" : ObjectId("5e680f0abdf084d4fe00ab83"), "firstname" : "Anna", "surname" : "Coppola", "username" : "user350", "age" : 40, "email" : "Anna.Coppola@live.com", "bloodType" : "AB-", "id_num" : "212547800387", "registerDate" : ISODate("2010-06-01T13:23:34.208Z"), "ticketNumber" : 8718, "jobs" : [ "Redes de Computadores" ], "favFruits" : [ "Banana" ], "movies" : [ { "title" : "12 Homens e uma Sentença (1957)", "rating" : 2.26 }, { "title" : "O Poderoso Chefão (1972)", "rating" : 3.49 }, { "title" : "Forrest Gump: O Contador de Histórias (1994)", "rating" : 0.58 }, { "title" : "O Poderoso Chefão II (1974)", "rating" : 1.29 } ], "dog" : { "name" : "Filipo", "age" : 14 } }
+            { "_id" : ObjectId("5e680f0abdf084d4fe00ab86"), "firstname" : "Giusy", "surname" : "Mazza", "username" : "user353", "age" : 30, "email" : "Giusy.Mazza@hotmail.com", "bloodType" : "B+", "id_num" : "631642748651", "registerDate" : ISODate("2018-01-15T02:06:34.240Z"), "ticketNumber" : 4288, "jobs" : [ "Tradutor e Intérprete", "Relações Públicas" ], "favFruits" : [ "Banana", "Kiwi", "Tangerina" ], "movies" : [ { "title" : "Clube da Luta (1999)", "rating" : 3.64 } ], "cat" : { "name" : "Marta", "age" : 7 } }
+            { "_id" : ObjectId("5e680f0abdf084d4fe00ab90"), "firstname" : "Stefano", "surname" : "Gallo", "username" : "user363", "age" : 47, "email" : "Stefano.Gallo@gmail.com", "bloodType" : "AB+", "id_num" : "233684837075", "registerDate" : ISODate("2013-06-11T19:57:01.158Z"), "ticketNumber" : 7206, "jobs" : [ "Automação Industrial", "Sistemas de Informação" ], "favFruits" : [ "Goiaba", "Banana", "Tangerina" ], "movies" : [ { "title" : "Gladiador (2000)", "rating" : 3.07 } ], "cat" : { "name" : "Alessia", "age" : 1 } }
+            { "_id" : ObjectId("5e680f0abdf084d4fe00ab91"), "firstname" : "Emanuela", "surname" : "Conte", "username" : "user364", "age" : 30, "email" : "Emanuela.Conte@uol.com.br", "bloodType" : "B+", "id_num" : "758642824251", "registerDate" : ISODate("2014-03-26T23:59:35.994Z"), "ticketNumber" : 7031, "jobs" : [ "Zootecnia" ], "favFruits" : [ "Banana" ], "movies" : [ { "title" : "À Espera de um Milagre (1999)", "rating" : 4.93 }, { "title" : "Harakiri (1962)", "rating" : 2.17 } ], "cat" : { "name" : "Pietro", "age" : 4 } }
+            { "_id" : ObjectId("5e680f0abdf084d4fe00ab92"), "firstname" : "Claudia", "surname" : "Damico", "username" : "user365", "age" : 45, "email" : "Claudia.Damico@hotmail.com", "bloodType" : "A-", "id_num" : "337705857245", "registerDate" : ISODate("2016-06-26T04:02:02.587Z"), "ticketNumber" : 3814, "jobs" : [ "Construção Naval", "Engenharia Industrial Madeireira" ], "favFruits" : [ "Laranja", "Mamão", "Banana" ], "movies" : [ { "title" : "Interestelar (2014)", "rating" : 1.12 } ], "dog" : { "name" : "Gianluca", "age" : 12 } }
+            { "_id" : ObjectId("5e680f0abdf084d4fe00ab9a"), "firstname" : "Claudio", "surname" : "Bernardi", "username" : "user373", "age" : 31, "email" : "Claudio.Bernardi@live.com", "bloodType" : "AB+", "id_num" : "065478483728", "registerDate" : ISODate("2012-03-10T18:19:23.889Z"), "ticketNumber" : 6625, "jobs" : [ "Ecologia", "Engenharia Civil" ], "favFruits" : [ "Melancia", "Banana" ], "movies" : [ { "title" : "Batman: O Cavaleiro das Trevas (2008)", "rating" : 3.46 } ], "cat" : { "name" : "Teresa", "age" : 3 } }
+            Type "it" for more
+
+
+
+
+
+
+
