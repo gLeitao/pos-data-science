@@ -4,7 +4,8 @@ a) Adicione outro Peixe e um Hamster com nome Frodo </br>
     Comando: db.exercicio_mongo.insert({name:"Frodo",species:"Peixe"}) </br></br>
  
 b) Faça uma contagem dos pets na coleção</br>
-    Comando: db.getCollection("exercicio_mongo").aggregate(
+    Comando: </br>
+    db.getCollection("exercicio_mongo").aggregate(
                 [
                     { 
                         "$group" : { 
