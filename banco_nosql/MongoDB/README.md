@@ -5,7 +5,9 @@ a) Adicione outro Peixe e um Hamster com nome Frodo </br>
  
 b) Faça uma contagem dos pets na coleção</br>
     Comando: </br>
-    db.getCollection("exercicio_mongo").aggregate( [ { "$group" : { "_id" : { }, "COUNT(*)" : { "$sum" : NumberInt(1) } } }, { "$project" : { "COUNT(*)" : "$COUNT(*)", "_id" : NumberInt(0) } } ], { "allowDiskUse" : true } ); 
+    
+    db.getCollection("exercicio_mongo").aggregate( [ { "$group" : { "_id" : { }, "COUNT(*)" : { "$sum" : NumberInt(1) } } }, { "$project" : { "COUNT(*)" : "$COUNT(*)", "_id" : NumberInt(0) } } ], { "allowDiskUse" : true } );
+
     Output: { "COUNT(*)" : 7 }
 
 c) Retorne apenas um elemento o método prático possível
