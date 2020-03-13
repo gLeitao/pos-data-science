@@ -27,7 +27,7 @@ b) Faça uma contagem dos pets na coleção</br>
                 { 
                     "allowDiskUse" : true
                 }
-            );
+            ); 
     Output: { "COUNT(*)" : 7 }
 
 c) Retorne apenas um elemento o método prático possível
