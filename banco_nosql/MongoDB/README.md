@@ -125,7 +125,9 @@ g) Utilizando o $where, liste todas as pessoas que tem gato e cachorro
             Type "it" for more
 
 h) Liste todas as pessoas mais novas que seus respectivos gatos.
-    Comando: db.getCollection("italians").find( { $where: "this.cat && this.age > this.cat.age" } );
+    
+    db.getCollection("italians").find( { $where: "this.cat && this.age > this.cat.age" } );
+
     Output: { "_id" : ObjectId("5e680f09bdf084d4fe00aa89"), "firstname" : "Ilaria", "surname" : "Martinelli", "username" : "user100", "age" : 34, "email" : "Ilaria.Martinelli@yahoo.com", "bloodType" : "O-", "id_num" : "052483747272", "registerDate" : ISODate("2013-10-22T07:27:24.790Z"), "ticketNumber" : 1013, "jobs" : [ "Sistemas Embarcados", "Teologia" ], "favFruits" : [ "Pêssego", "Kiwi" ], "movies" : [ { "title" : "O Senhor dos Anéis: O Retorno do Rei (2003)", "rating" : 4.71 }, { "title" : "Batman: O Cavaleiro das Trevas (2008)", "rating" : 4.61 }, { "title" : "Vingadores: Ultimato (2019)", "rating" : 1.79 } ], "cat" : { "name" : "Davide", "age" : 8 }, "dog" : { "name" : "Elisa", "age" : 14 } }
             { "_id" : ObjectId("5e680f09bdf084d4fe00aa8a"), "firstname" : "Massimiliano", "surname" : "Mariani", "username" : "user101", "age" : 50, "email" : "Massimiliano.Mariani@live.com", "bloodType" : "A-", "id_num" : "637560181156", "registerDate" : ISODate("2019-08-16T07:48:36.313Z"), "ticketNumber" : 2456, "jobs" : [ "Biotecnologia e Bioquímica", "Energias Renováveis" ], "favFruits" : [ "Maçã", "Maçã" ], "movies" : [ { "title" : "O Poderoso Chefão (1972)", "rating" : 2.41 }, { "title" : "Forrest Gump: O Contador de Histórias (1994)", "rating" : 2.07 }, { "title" : "Os Bons Companheiros (1990)", "rating" : 3.37 } ], "cat" : { "name" : "Emanuela", "age" : 15 }, "dog" : { "name" : "Federico", "age" : 2 } }
             { "_id" : ObjectId("5e680f09bdf084d4fe00aa8b"), "firstname" : "Alessandra", "surname" : "Ricci", "username" : "user102", "age" : 78, "email" : "Alessandra.Ricci@yahoo.com", "bloodType" : "B-", "id_num" : "321078734765", "registerDate" : ISODate("2008-08-11T13:03:03.633Z"), "ticketNumber" : 3809, "jobs" : [ "Silvicultura", "Secretariado" ], "favFruits" : [ "Pêssego" ], "movies" : [ { "title" : "A Viagem de Chihiro (2001)", "rating" : 0.41 }, { "title" : "Parasita (2019)", "rating" : 0.97 }, { "title" : "O Poderoso Chefão II (1974)", "rating" : 2.58 }, { "title" : "A Lista de Schindler (1993)", "rating" : 0.35 } ], "cat" : { "name" : "Tiziana", "age" : 5 }, "dog" : { "name" : "Elena", "age" : 13 } }
@@ -149,7 +151,9 @@ h) Liste todas as pessoas mais novas que seus respectivos gatos.
             Type "it" for more
 
 i) Liste as pessoas que tem o mesmo nome que seu bichano (gatou ou cachorro)
-    Comando: db.getCollection("italians").find( { $where: "this.cat && this.firstname == this.cat.name || this.dog && this.firstname == this.dog.name" } );
+    
+    db.getCollection("italians").find( { $where: "this.cat && this.firstname == this.cat.name || this.dog && this.firstname == this.dog.name" } );
+
     Output: { "_id" : ObjectId("5e680f0abdf084d4fe00ab3a"), "firstname" : "Stefano", "surname" : "Fiore", "username" : "user277", "age" : 52, "email" : "Stefano.Fiore@live.com", "bloodType" : "A-", "id_num" : "386275515723", "registerDate" : ISODate("2015-10-31T06:56:03.932Z"), "ticketNumber" : 8248, "jobs" : [ "Gestão Hospitalar", "Musicoterapia" ], "favFruits" : [ "Pêssego", "Laranja" ], "movies" : [ { "title" : "Cidade de Deus (2002)", "rating" : 3.87 }, { "title" : "12 Homens e uma Sentença (1957)", "rating" : 1.56 }, { "title" : "Um Estranho no Ninho (1975)", "rating" : 4.85 } ], "cat" : { "name" : "Stefano", "age" : 13 } }
             { "_id" : ObjectId("5e680f0abdf084d4fe00ab76"), "firstname" : "Tiziana", "surname" : "Giordano", "username" : "user337", "age" : 64, "email" : "Tiziana.Giordano@gmail.com", "bloodType" : "B+", "id_num" : "767213445213", "registerDate" : ISODate("2016-12-04T00:34:38.216Z"), "ticketNumber" : 8577, "jobs" : [ "Mineração", "Gestão Ambiental" ], "favFruits" : [ "Maçã", "Maçã", "Tangerina" ], "movies" : [ { "title" : "O Resgate do Soldado Ryan (1998)", "rating" : 4.17 }, { "title" : "Seven: Os Sete Crimes Capitais (1995)", "rating" : 2.18 }, { "title" : "Batman: O Cavaleiro das Trevas (2008)", "rating" : 1.27 }, { "title" : "Um Sonho de Liberdade (1994)", "rating" : 2.42 } ], "cat" : { "name" : "Tiziana", "age" : 10 } }
             { "_id" : ObjectId("5e680f0abdf084d4fe00abb4"), "firstname" : "Elena", "surname" : "Montanari", "username" : "user399", "age" : 24, "email" : "Elena.Montanari@live.com", "bloodType" : "A+", "id_num" : "321526613345", "registerDate" : ISODate("2011-08-13T20:41:30.406Z"), "ticketNumber" : 5565, "jobs" : [ "Ciências Naturais e Exatas", "Fisioterapia" ], "favFruits" : [ "Maçã" ], "movies" : [ { "title" : "Star Wars, Episódio V: O Império Contra-Ataca (1980)", "rating" : 4.24 } ], "cat" : { "name" : "Monica", "age" : 7 }, "dog" : { "name" : "Elena", "age" : 9 } }
@@ -173,18 +177,9 @@ i) Liste as pessoas que tem o mesmo nome que seu bichano (gatou ou cachorro)
             Type "it" for more
 
 j) Projete apenas o nome e sobrenomedas pessoas com tipo de sangue de fator RH negativo
-    Comando: db.getCollection("italians").find(
-                { 
-                    "bloodType" : { 
-                        "$regex" : /\w{1,2}-/i
-                    }
-                }, 
-                { 
-                    "firstname" : "$firstname", 
-                    "surname" : "$surname", 
-                    "_id" : NumberInt(0)
-                }
-            );
+    
+    db.getCollection("italians").find( { "bloodType" : { "$regex" : /\w{1,2}-/i } }, { "firstname" : "$firstname", "surname" : "$surname", "_id" : NumberInt(0) } );
+
     Output: { "firstname" : "Ilaria", "surname" : "Martinelli" }
             { "firstname" : "Massimiliano", "surname" : "Mariani" }
             { "firstname" : "Alessandra", "surname" : "Ricci" }
@@ -208,23 +203,9 @@ j) Projete apenas o nome e sobrenomedas pessoas com tipo de sangue de fator RH n
             Type "it" for more
 
 k) Projete apenas os animais dos italianos. Devem ser listados os animais com nome e idade. Não mostre o identificado do mongo (ObjectId)
-    Comando: db.getCollection("italians").find(
-                { 
-                    "cat" : { 
-                        "$ne" : null
-                    }, 
-                    "dog" : { 
-                        "$ne" : null
-                    }
-                }, 
-                { 
-                    "cat.name" : "$cat.name", 
-                    "cat.age" : "$cat.age", 
-                    "dog.name" : "$dog.name", 
-                    "dog.age" : "$dog.age", 
-                    "_id" : NumberInt(0)
-                }
-            );
+    
+    db.getCollection("italians").find( { "cat" : { "$ne" : null }, "dog" : { "$ne" : null } }, { "cat.name" : "$cat.name", "cat.age" : "$cat.age", "dog.name" : "$dog.name", "dog.age" : "$dog.age", "_id" : NumberInt(0) } );
+
     Output: { "cat" : { "name" : "Davide", "age" : 8 }, "dog" : { "name" : "Elisa", "age" : 14 } }
             { "cat" : { "name" : "Emanuela", "age" : 15 }, "dog" : { "name" : "Federico", "age" : 2 } }
             { "cat" : { "name" : "Tiziana", "age" : 5 }, "dog" : { "name" : "Elena", "age" : 13 } }
@@ -248,21 +229,9 @@ k) Projete apenas os animais dos italianos. Devem ser listados os animais com no
             Type "it" for more
 
 l) Quais são as 5 pessoas mais velhas com sobrenome Rossi?
-    Comando:db.getCollection("italians").find(
-                { 
-                    "surname" : "Rossi"
-                }, 
-                { 
-                    "firstname" : "$firstname", 
-                    "surname" : "$surname", 
-                    "age" : "$age", 
-                    "_id" : NumberInt(0)
-                }
-            ).sort(
-                { 
-                    "age" : NumberInt(-1)
-                }
-            ).limit(5);
+    
+    db.getCollection("italians").find( { "surname" : "Rossi" }, { "firstname" : "$firstname", "surname" : "$surname", "age" : "$age", "_id" : NumberInt(0) } ).sort( { "age" : NumberInt(-1) } ).limit(5);
+
     Output: { "firstname" : "Massimo", "surname" : "Rossi", "age" : 79 }
             { "firstname" : "Elisabetta", "surname" : "Rossi", "age" : 77 }
             { "firstname" : "Sonia", "surname" : "Rossi", "age" : 76 }
@@ -270,57 +239,23 @@ l) Quais são as 5 pessoas mais velhas com sobrenome Rossi?
             { "firstname" : "Giorgio", "surname" : "Rossi", "age" : 70 }
 
 m) Crie um italiano que tenha um leão como animal de estimação. Associe um nome e idade ao bichano
-    Comando: db.getCollection("italians").insert({ 
-                "firstname" : "Emanuele", 
-                "surname" : "Bianco", 
-                "username" : "user130", 
-                "age" : 56.0, 
-                "email" : "Emanuele.Bianco@gmail.com", 
-                "bloodType" : "A+", 
-                "id_num" : "664641167228", 
-                "registerDate" : ISODate("2012-07-13T20:39:13.001+0000"), 
-                "ticketNumber" : 5988.0, 
-                "jobs" : [
-                    "Engenharia de Transporte e da Mobilidade", 
-                    "Engenharia de Transporte e da Mobilidade"
-                ], 
-                "favFruits" : [
-                    "Tangerina", 
-                    "Goiaba"
-                ], 
-                "movies" : [
-                    {
-                        "title" : "Pulp Fiction: Tempo de Violência (1994)", 
-                        "rating" : 1.27
-                    }, 
-                    {
-                        "title" : "Batman: O Cavaleiro das Trevas (2008)", 
-                        "rating" : 1.73
-                    }, 
-                    {
-                        "title" : "1917 (2019)", 
-                        "rating" : 2.59
-                    }, 
-                    {
-                        "title" : "A Viagem de Chihiro (2001)", 
-                        "rating" : 2.67
-                    }
-                ], 
-                "lion" : {
-                    "name" : "Alex", 
-                    "age" : 15.0
-                }
-            });
+    
+    db.getCollection("italians").insert({ "firstname" : "Emanuele", "surname" : "Bianco", "username" : "user130", "age" : 56.0, "email" : "Emanuele.Bianco@gmail.com", "bloodType" : "A+", "id_num" : "664641167228", "registerDate" : ISODate("2012-07-13T20:39:13.001+0000"), "ticketNumber" : 5988.0, "jobs" : [ "Engenharia de Transporte e da Mobilidade", "Engenharia de Transporte e da Mobilidade" ], "favFruits" : [ "Tangerina", "Goiaba" ], "movies" : [ { "title" : "Pulp Fiction: Tempo de Violência (1994)", "rating" : 1.27 }, { "title" : "Batman: O Cavaleiro das Trevas (2008)", "rating" : 1.73 }, { "title" : "1917 (2019)", "rating" : 2.59 }, { "title" : "A Viagem de Chihiro (2001)", "rating" : 2.67 } ], "lion" : { "name" : "Alex", "age" : 15.0 } });
+
     Output: riteResult({ "nInserted" : 1 })
 
 n) Infelizmente o Leão comeu o italiano. Remova essa pessoa usando o Id
-    Comando: db.getCollection("italians").remove({"_id": ObjectId("5e68237aa148741caf077843")})
+    
+    db.getCollection("italians").remove({"_id": ObjectId("5e68237aa148741caf077843")})
+
     Output: WriteResult({ "nRemoved" : 1 })
 
 o) Passou um ano. Atualize a idade de todos os italianos e dos bichanos em 1
-    Comando: db.getCollection("italians").update( { }, { "$inc": { "age": 1 } }, { multi: true } );
-             db.getCollection("italians").update( { "cat": { "$exists": true } }, { "$inc": { "cat.age": 1 } },{ multi: true } );
-             db.getCollection("italians").update( { "dog": { "$exists": true } }, { "$inc": { "dog.age": 1 } },{ multi: true } );
+    
+    db.getCollection("italians").update( { }, { "$inc": { "age": 1 } }, { multi: true } ); 
+    db.getCollection("italians").update( { "cat": { "$exists": true } }, { "$inc": { "cat.age": 1 } },{ multi: true } ); 
+    db.getCollection("italians").update( { "dog": { "$exists": true } }, { "$inc": { "dog.age": 1 } },{ multi: true } );
+
     Output: WriteResult({ "nMatched" : 10000, "nUpserted" : 0, "nModified" : 10000 })
             WriteResult({ "nMatched" : 6047, "nUpserted" : 0, "nModified" : 6047 })
             WriteResult({ "nMatched" : 4053, "nUpserted" : 0, "nModified" : 4053 })
