@@ -11,14 +11,10 @@ b) Faça uma contagem dos pets na coleção</br>
     Output: { "COUNT(*)" : 7 }
 
 c) Retorne apenas um elemento o método prático possível
-    Comando: db.getCollection("exercicio_mongo").find(
-                { 
-                    "_id" : ObjectId("5e68068c6012c8077fc4ab40")
-                }, 
-                { 
-                    "name" : "$_name"
-                }
-            );
+    Comando: 
+    
+    db.getCollection("exercicio_mongo").find( { "_id" : ObjectId("5e68068c6012c8077fc4ab40") }, { "name" : "$_name" } );
+
     Output: { "_id" : ObjectId("5e68068c6012c8077fc4ab40"), "name" : "Mike" }
 
 d) Identifique o ID para o Gato Kilha
