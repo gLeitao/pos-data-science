@@ -5,6 +5,7 @@ a) Adicione outro Peixe e um Hamster com nome Frodo </br>
  
 b) Faça uma contagem dos pets na coleção</br>
     Comando: </br>
+    ```javascript
     db.getCollection("exercicio_mongo").aggregate(
                 [
                     { 
@@ -28,6 +29,7 @@ b) Faça uma contagem dos pets na coleção</br>
                     "allowDiskUse" : true
                 }
             ); 
+    ```
     Output: { "COUNT(*)" : 7 }
 
 c) Retorne apenas um elemento o método prático possível
