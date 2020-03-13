@@ -9,9 +9,11 @@ Para rodar o codigo é necessário:
 - Biblioteca do Redis instalada no Python (pip install redis)
 
 <h2>Executando:</h2>
-Para executar o Redinsgo basta executar o arquivo bingo_redis.py:
+Para executar o Redinsgo basta executar o arquivo bingo_redis.py: </br>
 
+``` terminal
 phython bingo_redis.py
+```
 
 Após chamar o comando deverá aparecer a seguinte saida no console:
 ![Redinsgo executando](resultado_exercicio.jpg)
