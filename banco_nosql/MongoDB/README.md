@@ -261,69 +261,15 @@ o) Passou um ano. Atualize a idade de todos os italianos e dos bichanos em 1
             WriteResult({ "nMatched" : 4053, "nUpserted" : 0, "nModified" : 4053 })
 
 p) O Corona Vírus chegou na Itália e misteriosamente atingiu pessoas somente com gatos e de 66 anos. Remova esses italianos
-    Comando: db.getCollection("italians").remove(
-                { 
-                    "age" : NumberLong(66), 
-                    "cat" : { 
-                        "$ne" : null
-                    }
-                }
-            );
+    
+    db.getCollection("italians").remove( { "age" : NumberLong(66), "cat" : { "$ne" : null } } );
+
     Output: WriteResult({ "nRemoved" : 76 })
 
 q) Utilizando o framework agregate, liste apenas as pessoas com nomes iguais a sua respectiva mãe e que tenha gato ou cachorro
-    Comando: db.getCollection("italians").aggregate(
-            [
-                {
-                    "$match":
-                    {
-                        "$and": 
-                        [
-                            {
-                                mother:
-                                {
-                                    $exists:1
-                                }
-                            }, 
-                            {
-                                "$or": 
-                                [
-                                    {
-                                        dog:
-                                        {
-                                            $exists:1
-                                        }
-                                    }, 
-                                    {
-                                        cat:
-                                        {
-                                            $exists:1
-                                        }
-                                    }
-                                ]
-                            }
-                    ]
-                    }
-                },
-                {
-                    "$addFields": 
-                    { 
-                        isEqual: 
-                        {
-                            "$cmp":
-                                [
-                                    "$firstname","$mother.firstname"
-                                ]
-                        }
-                    }
-                },
-                {
-                    "$match":
-                        {
-                            "isEqual":0
-                        }
-                }
-            ])
+    
+    db.getCollection("italians").aggregate( [ { "$match": { "$and": [ { mother: { $exists:1 } }, { "$or": [ { dog: { $exists:1 } }, { cat: { $exists:1 } } ] } ] } }, { "$addFields": { isEqual: { "$cmp": [ "$firstname","$mother.firstname" ] } } }, { "$match": { "isEqual":0 } } ]);
+
     Output: { "_id" : ObjectId("5e680f09bdf084d4fe00aaba"), "firstname" : "Federica", "surname" : "Martino", "username" : "user149", "age" : 46, "email" : "Federica.Martino@live.com", "bloodType" : "A+", "id_num" : "448576806861", "registerDate" : ISODate("2008-09-04T15:29:20.386Z"), "ticketNumber" : 3823, "jobs" : [ "Turismo", "Comércio Exterior" ], "favFruits" : [ "Mamão" ], "movies" : [ { "title" : "O Poderoso Chefão (1972)", "rating" : 1.94 }, { "title" : "Um Sonho de Liberdade (1994)", "rating" : 2.51 }, { "title" : "Coringa (2019)", "rating" : 3.17 }, { "title" : "Star Wars, Episódio V: O Império Contra-Ataca (1980)", "rating" : 4.47 }, { "title" : "Seven: Os Sete Crimes Capitais (1995)", "rating" : 2.32 } ], "mother" : { "firstname" : "Federica", "surname" : "Martino", "age" : 61 }, "father" : { "firstname" : "Nicola", "surname" : "Martino", "age" : 61 }, "cat" : { "name" : "Laura", "age" : 15 }, "isEqual" : 0 }
             { "_id" : ObjectId("5e680f0abdf084d4fe00ab22"), "firstname" : "Barbara", "surname" : "D’Angelo", "username" : "user253", "age" : 13, "email" : "Barbara.D’Angelo@uol.com.br", "bloodType" : "B-", "id_num" : "551578812417", "registerDate" : ISODate("2007-08-29T12:11:12.979Z"), "ticketNumber" : 2886, "jobs" : [ "Comunicação Institucional" ], "favFruits" : [ "Banana", "Tangerina", "Mamão" ], "movies" : [ { "title" : "Três Homens em Conflito (1966)", "rating" : 4.21 }, { "title" : "Harakiri (1962)", "rating" : 0.05 }, { "title" : "A Lista de Schindler (1993)", "rating" : 1.76 }, { "title" : "O Resgate do Soldado Ryan (1998)", "rating" : 4.24 } ], "mother" : { "firstname" : "Barbara", "surname" : "D’Angelo", "age" : 37 }, "dog" : { "name" : "Daniela", "age" : 14 }, "isEqual" : 0 }
             { "_id" : ObjectId("5e680f0abdf084d4fe00abc5"), "firstname" : "Lorenzo", "surname" : "Fontana", "username" : "user416", "age" : 33, "email" : "Lorenzo.Fontana@live.com", "bloodType" : "AB-", "id_num" : "650880644382", "registerDate" : ISODate("2016-08-30T16:58:03.965Z"), "ticketNumber" : 9679, "jobs" : [ "Engenharia Mecatrônica" ], "favFruits" : [ "Goiaba" ], "movies" : [ { "title" : "Matrix (1999)", "rating" : 1.33 }, { "title" : "Pulp Fiction: Tempo de Violência (1994)", "rating" : 4.54 }, { "title" : "O Senhor dos Anéis: A Sociedade do Anel (2001)", "rating" : 3.19 }, { "title" : "Star Wars, Episódio V: O Império Contra-Ataca (1980)", "rating" : 0.64 }, { "title" : "Os Sete Samurais (1954)", "rating" : 0.79 } ], "mother" : { "firstname" : "Lorenzo", "surname" : "Fontana", "age" : 64 }, "father" : { "firstname" : "Elena", "surname" : "Fontana", "age" : 67 }, "cat" : { "name" : "Giovanni", "age" : 14 }, "dog" : { "name" : "Domenico", "age" : 18 }, "isEqual" : 0 }
@@ -338,38 +284,9 @@ q) Utilizando o framework agregate, liste apenas as pessoas com nomes iguais a s
 
 
 r) Utilizando aggregate framework, faça uma lista de nomes única de nomes. Faça isso usando apenas o primeiro nome
-    Comando: db.getCollection("italians").aggregate(
-                [
-                    { 
-                        "$project" : { 
-                            "firstname" : "$firstname", 
-                            "_id" : NumberInt(0)
-                        }
-                    }, 
-                    { 
-                        "$group" : { 
-                            "_id" : null, 
-                            "distinct" : { 
-                                "$addToSet" : "$$ROOT"
-                            }
-                        }
-                    }, 
-                    { 
-                        "$unwind" : { 
-                            "path" : "$distinct", 
-                            "preserveNullAndEmptyArrays" : false
-                        }
-                    }, 
-                    { 
-                        "$replaceRoot" : { 
-                            "newRoot" : "$distinct"
-                        }
-                    }
-                ], 
-                { 
-                    "allowDiskUse" : true
-                }
-            );
+    
+    db.getCollection("italians").aggregate( [ { "$project" : { "firstname" : "$firstname", "_id" : NumberInt(0) } }, { "$group" : { "_id" : null, "distinct" : { "$addToSet" : "$$ROOT" } } }, { "$unwind" : { "path" : "$distinct", "preserveNullAndEmptyArrays" : false } }, { "$replaceRoot" : { "newRoot" : "$distinct" } } ], { "allowDiskUse" : true } );
+
     Output: { "firstname" : "Stefania" }
             { "firstname" : "Angela" }
             { "firstname" : "Roberto" }
@@ -392,38 +309,9 @@ r) Utilizando aggregate framework, faça uma lista de nomes única de nomes. Fa�
             Type "it" for more
 
 s) Agora faça a mesma lista do item acima, considerando nome completo
-    Comando: db.getCollection("italians").aggregate(
-                [
-                    { 
-                        "$project" : { 
-                            "fullname" : { $concat: [ "$firstname", " ", "$surname" ] } , 
-                            "_id" : NumberInt(0)
-                        }
-                    }, 
-                    { 
-                        "$group" : { 
-                            "_id" : null, 
-                            "distinct" : { 
-                                "$addToSet" : "$$ROOT"
-                            }
-                        }
-                    }, 
-                    { 
-                        "$unwind" : { 
-                            "path" : "$distinct", 
-                            "preserveNullAndEmptyArrays" : false
-                        }
-                    }, 
-                    { 
-                        "$replaceRoot" : { 
-                            "newRoot" : "$distinct"
-                        }
-                    }
-                ], 
-                { 
-                    "allowDiskUse" : true
-                }
-            );
+    
+    db.getCollection("italians").aggregate( [ { "$project" : { "fullname" : { $concat: [ "$firstname", " ", "$surname" ] } , "_id" : NumberInt(0) } }, { "$group" : { "_id" : null, "distinct" : { "$addToSet" : "$$ROOT" } } }, { "$unwind" : { "path" : "$distinct", "preserveNullAndEmptyArrays" : false } }, { "$replaceRoot" : { "newRoot" : "$distinct" } } ], { "allowDiskUse" : true } );
+
     Output: { "fullname" : "Angela Lombardo" }
             { "fullname" : "Alessandra Fiore" }
             { "fullname" : "Fabrizio Costatini" }
@@ -447,44 +335,9 @@ s) Agora faça a mesma lista do item acima, considerando nome completo
             Type "it" for more
 
 t) Procure pessoas que gosta de Banana ou Maçã, tenham cachorro ou gato, mais de 20 e menos de 60 anos
-    Comando: db.getCollection("italians").find(
-                { 
-                    "$and" : [
-                        { 
-                            "favFruits" : { 
-                                "$in" : [
-                                    "Banana", 
-                                    "Maça"
-                                ]
-                            }
-                        }, 
-                        { 
-                            "$or" : [
-                                { 
-                                    "dog" : { 
-                                        "$exists" : true
-                                    }
-                                }, 
-                                { 
-                                    "cat" : { 
-                                        "$exists" : true
-                                    }
-                                }
-                            ]
-                        }, 
-                        { 
-                            "age" : { 
-                                "$gt" : 20.0
-                            }
-                        }, 
-                        { 
-                            "age" : { 
-                                "$lt" : 60.0
-                            }
-                        }
-                    ]
-                }
-            );
+    
+    db.getCollection("italians").find( { "$and" : [ { "favFruits" : { "$in" : [ "Banana", "Maça" ] } }, { "$or" : [ { "dog" : { "$exists" : true } }, { "cat" : { "$exists" : true } } ] }, { "age" : { "$gt" : 20.0 } }, { "age" : { "$lt" : 60.0 } } ] } );
+
     Output: { "_id" : ObjectId("5e680f09bdf084d4fe00aaa4"), "firstname" : "Federica", "surname" : "Morelli", "username" : "user127", "age" : 34, "email" : "Federica.Morelli@gmail.com", "bloodType" : "B+", "id_num" : "446181011108", "registerDate" : ISODate("2015-05-20T07:20:44.210Z"), "ticketNumber" : 3186, "jobs" : [ "Esporte", "Ecologia" ], "favFruits" : [ "Tangerina", "Banana" ], "movies" : [ { "title" : "Pulp Fiction: Tempo de Violência (1994)", "rating" : 1.56 }, { "title" : "Vingadores: Ultimato (2019)", "rating" : 2.5 } ], "dog" : { "name" : "Cinzia", "age" : 7 } }
             { "_id" : ObjectId("5e680f09bdf084d4fe00aaa5"), "firstname" : "Filipo", "surname" : "Serra", "username" : "user128", "age" : 54, "email" : "Filipo.Serra@gmail.com", "bloodType" : "A-", "id_num" : "605317521764", "registerDate" : ISODate("2014-11-15T12:13:20.458Z"), "ticketNumber" : 135, "jobs" : [ "Gestão Hospitalar", "Sistemas de Informação" ], "favFruits" : [ "Goiaba", "Banana", "Maçã" ], "movies" : [ { "title" : "Intocáveis (2011)", "rating" : 1.09 }, { "title" : "Parasita (2019)", "rating" : 0.49 }, { "title" : "A Felicidade Não se Compra (1946)", "rating" : 1.83 }, { "title" : "O Resgate do Soldado Ryan (1998)", "rating" : 2.42 }, { "title" : "Pulp Fiction: Tempo de Violência (1994)", "rating" : 1.05 } ], "cat" : { "name" : "Patrizia", "age" : 5 } }
             { "_id" : ObjectId("5e680f09bdf084d4fe00aaac"), "firstname" : "Elisabetta", "surname" : "Mazza", "username" : "user135", "age" : 42, "email" : "Elisabetta.Mazza@yahoo.com", "bloodType" : "A-", "id_num" : "775721118158", "registerDate" : ISODate("2018-04-06T18:30:44.349Z"), "ticketNumber" : 75, "jobs" : [ "Comunicação Institucional" ], "favFruits" : [ "Laranja", "Banana", "Kiwi" ], "movies" : [ { "title" : "O Silêncio dos Inocentes (1991)", "rating" : 2.88 }, { "title" : "Pulp Fiction: Tempo de Violência (1994)", "rating" : 1.1 }, { "title" : "À Espera de um Milagre (1999)", "rating" : 2.89 } ], "cat" : { "name" : "Angelo", "age" : 11 } }
@@ -507,7 +360,7 @@ t) Procure pessoas que gosta de Banana ou Maçã, tenham cachorro ou gato, mais 
             { "_id" : ObjectId("5e680f0abdf084d4fe00ab9a"), "firstname" : "Claudio", "surname" : "Bernardi", "username" : "user373", "age" : 31, "email" : "Claudio.Bernardi@live.com", "bloodType" : "AB+", "id_num" : "065478483728", "registerDate" : ISODate("2012-03-10T18:19:23.889Z"), "ticketNumber" : 6625, "jobs" : [ "Ecologia", "Engenharia Civil" ], "favFruits" : [ "Melancia", "Banana" ], "movies" : [ { "title" : "Batman: O Cavaleiro das Trevas (2008)", "rating" : 3.46 } ], "cat" : { "name" : "Teresa", "age" : 3 } }
             Type "it" for more
 
-Exercicio 3 - Stockbrokers
+</br></br><h2>Exercicio 3 - Stockbrokers</h2>
 
 a) Liste as ações com profit acima de 0.5 (limite a 10 o resultado)
     Comando: db.getCollection("stock").find(
