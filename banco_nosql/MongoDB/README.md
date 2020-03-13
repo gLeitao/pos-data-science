@@ -1,7 +1,8 @@
 <h2> Exercicio 1 - Aquecendo com os pets </h2>
 
 a) Adicione outro Peixe e um Hamster com nome Frodo </br>
-    db.exercicio_mongo.insert({name:"Frodo",species:"Peixe"}) </br></br>
+    
+    db.exercicio_mongo.insert({name:"Frodo",species:"Peixe"})
  
 b) Faça uma contagem dos pets na coleção</br>
     
@@ -40,16 +41,13 @@ g) Use o find para listar todos os pets com nome Mike </br>
     Output: { "_id" : ObjectId("5e68068c6012c8077fc4ab40"), "name" : "Mike", "species" : "Hamster" }
             { "_id" : ObjectId("5e6807136012c8077fc4ab43"), "name" : "Mike", "species" : "Cachorro" }
 
-h) Liste apenas o documento que é um Cachorro chamado Mike
-    Comando:db.getCollection("exercicio_mongo").find(
-                { 
-                    "name" : "Mike", 
-                    "species" : "Cachorro"
-                }
-            );
+h) Liste apenas o documento que é um Cachorro chamado Mike </br>
+    
+    db.getCollection("exercicio_mongo").find( { "name" : "Mike", "species" : "Cachorro" } );
+
     Output: { "_id" : ObjectId("5e6807136012c8077fc4ab43"), "name" : "Mike", "species" : "Cachorro" }
 
-Exercicio 2 - Mama mia!
+<h2>Exercicio 2 - Mama mia!</h2>
 
 a) Liste/Conte todas as pessoas que tem exatamente 99 anos. Você pode usar um count para indicar a quantidade.
     Comando: db.getCollection("italians").aggregate(
