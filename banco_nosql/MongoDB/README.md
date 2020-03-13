@@ -15,8 +15,7 @@ c) Retorne apenas um elemento o método prático possível </br>
 
     Output: { "_id" : ObjectId("5e68068c6012c8077fc4ab40"), "name" : "Mike" }
 
-d) Identifique o ID para o Gato Kilha </br>
-    C 
+d) Identifique o ID para o Gato Kilha </br> 
     
     db.getCollection("exercicio_mongo").find( { "name" : "Kilha", "species" : "Gato" }, { "_id" : "$_id" } );
 
@@ -34,12 +33,10 @@ f) Use o find para trazer todos os Hamsters </br>
 
     Output: { "_id" : ObjectId("5e68068c6012c8077fc4ab40"), "name" : "Mike", "species" : "Hamster" }
 
-g) Use o find para listar todos os pets com nome Mike
-    Comando: db.getCollection("exercicio_mongo").find(
-                { 
-                    "name" : "Mike"
-                }
-            );
+g) Use o find para listar todos os pets com nome Mike </br>
+    
+    db.getCollection("exercicio_mongo").find( { "name" : "Mike" } );
+
     Output: { "_id" : ObjectId("5e68068c6012c8077fc4ab40"), "name" : "Mike", "species" : "Hamster" }
             { "_id" : ObjectId("5e6807136012c8077fc4ab43"), "name" : "Mike", "species" : "Cachorro" }
 
