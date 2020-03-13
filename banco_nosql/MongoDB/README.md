@@ -1,51 +1,37 @@
 <h2> Exercicio 1 - Aquecendo com os pets </h2>
 
 a) Adicione outro Peixe e um Hamster com nome Frodo </br>
-    Comando: db.exercicio_mongo.insert({name:"Frodo",species:"Peixe"}) </br></br>
+    db.exercicio_mongo.insert({name:"Frodo",species:"Peixe"}) </br></br>
  
 b) Faça uma contagem dos pets na coleção</br>
-    Comando: </br>
     
     db.getCollection("exercicio_mongo").aggregate( [ { "$group" : { "_id" : { }, "COUNT(*)" : { "$sum" : NumberInt(1) } } }, { "$project" : { "COUNT(*)" : "$COUNT(*)", "_id" : NumberInt(0) } } ], { "allowDiskUse" : true } );
 
     Output: { "COUNT(*)" : 7 }
 
-c) Retorne apenas um elemento o método prático possível
-    Comando: 
+c) Retorne apenas um elemento o método prático possível </br>
     
     db.getCollection("exercicio_mongo").find( { "_id" : ObjectId("5e68068c6012c8077fc4ab40") }, { "name" : "$_name" } );
 
     Output: { "_id" : ObjectId("5e68068c6012c8077fc4ab40"), "name" : "Mike" }
 
-d) Identifique o ID para o Gato Kilha
-    Comando: db.getCollection("exercicio_mongo").find(
-                { 
-                    "name" : "Kilha", 
-                    "species" : "Gato"
-                }, 
-                { 
-                    "_id" : "$_id"
-                }
-            );
+d) Identifique o ID para o Gato Kilha </br>
+    C 
+    
+    db.getCollection("exercicio_mongo").find( { "name" : "Kilha", "species" : "Gato" }, { "_id" : "$_id" } );
+
     Output: { "_id" : ObjectId("5e6807136012c8077fc4ab42") }
 
-e) Faça uma busca pelo ID e traga o Hamster Mike
-    Comando: db.getCollection("exercicio_mongo").find(
-                { 
-                    "_id" : ObjectId("5e68068c6012c8077fc4ab40")
-                }, 
-                { 
-                    "name" : "$_name"
-                }
-            );
+e) Faça uma busca pelo ID e traga o Hamster Mike </br>
+    
+    db.getCollection("exercicio_mongo").find( { "_id" : ObjectId("5e68068c6012c8077fc4ab40") }, { "name" : "$_name" } );
+
     Output: { "_id" : ObjectId("5e68068c6012c8077fc4ab40"), "name" : "Mike" }
 
-f) Use o find para trazer todos os Hamsters
-    Comando: db.getCollection("exercicio_mongo").find(
-                { 
-                    "species" : "Hamster"
-                }
-            );
+f) Use o find para trazer todos os Hamsters </br>
+    
+    db.getCollection("exercicio_mongo").find( { "species" : "Hamster" } );
+
     Output: { "_id" : ObjectId("5e68068c6012c8077fc4ab40"), "name" : "Mike", "species" : "Hamster" }
 
 g) Use o find para listar todos os pets com nome Mike
