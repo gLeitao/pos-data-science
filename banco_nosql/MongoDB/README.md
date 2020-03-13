@@ -1,7 +1,7 @@
-Exercicio 1 - Aquecendo com os pets
+<h2> Exercicio 1 - Aquecendo com os pets </h2>
 
 a) Adicione outro Peixe e um Hamster com nome Frodo
-    Comando: db.exercicio_mongo.insert({name:"Frodo",species:"Peixe"})
+    Comando: ```javascript db.exercicio_mongo.insert({name:"Frodo",species:"Peixe"})```
  
 b) Faça uma contagem dos pets na coleção
     Comando: db.getCollection("exercicio_mongo").aggregate(
