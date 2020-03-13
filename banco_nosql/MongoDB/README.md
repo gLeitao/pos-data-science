@@ -47,211 +47,43 @@ h) Liste apenas o documento que é um Cachorro chamado Mike </br>
 
     Output: { "_id" : ObjectId("5e6807136012c8077fc4ab43"), "name" : "Mike", "species" : "Cachorro" }
 
-<h2>Exercicio 2 - Mama mia!</h2>
+</br></br><h2>Exercicio 2 - Mama mia!</h2>
 
 a) Liste/Conte todas as pessoas que tem exatamente 99 anos. Você pode usar um count para indicar a quantidade.
-    Comando: db.getCollection("italians").aggregate(
-                [
-                    { 
-                        "$match" : { 
-                            "age" : NumberLong(99)
-                        }
-                    }, 
-                    { 
-                        "$group" : { 
-                            "_id" : { 
+    
+    db.getCollection("italians").aggregate( [ { "$match" : { "age" : NumberLong(99) } }, { "$group" : { "_id" : { }, "COUNT(*)" : { "$sum" : NumberInt(1) } } }, { "$project" : { "COUNT(*)" : "$COUNT(*)", "_id" : NumberInt(0) } } ], { "allowDiskUse" : true } );
 
-                            }, 
-                            "COUNT(*)" : { 
-                                "$sum" : NumberInt(1)
-                            }
-                        }
-                    }, 
-                    { 
-                        "$project" : { 
-                            "COUNT(*)" : "$COUNT(*)", 
-                            "_id" : NumberInt(0)
-                        }
-                    }
-                ], 
-                { 
-                    "allowDiskUse" : true
-                }
-            );
     Output: Não houve retorno, pois não há nenhum registro com idade igual a 99 anos
 
 b) Identifique quantas pessoas são elegíveis atendimento prioritário (pessoas com mais de 65 anos)
-    Comando: db.getCollection("italians").aggregate(
-                [
-                    { 
-                        "$match" : { 
-                            "age" : { 
-                                "$gt" : NumberLong(65)
-                            }
-                        }
-                    }, 
-                    { 
-                        "$group" : { 
-                            "_id" : { 
+    
+    db.getCollection("italians").aggregate( [ { "$match" : { "age" : { "$gt" : NumberLong(65) } } }, { "$group" : { "_id" : { }, "COUNT(*)" : { "$sum" : NumberInt(1) } } }, { "$project" : { "COUNT(*)" : "$COUNT(*)", "_id" : NumberInt(0) } } ], { "allowDiskUse" : true } );
 
-                            }, 
-                            "COUNT(*)" : { 
-                                "$sum" : NumberInt(1)
-                            }
-                        }
-                    }, 
-                    { 
-                        "$project" : { 
-                            "COUNT(*)" : "$COUNT(*)", 
-                            "_id" : NumberInt(0)
-                        }
-                    }
-                ], 
-                { 
-                    "allowDiskUse" : true
-                }
-            );
     Output: { "COUNT(*)" : 1723 }
 
 c) Identifique todos os jovens (pessoas entre 12 a 18 anos)
-    Comando: db.getCollection("italians").aggregate(
-                [
-                    { 
-                        "$match" : { 
-                            "$and" : [
-                                { 
-                                    "age" : { 
-                                        "$gte" : NumberLong(12)
-                                    }
-                                }, 
-                                { 
-                                    "age" : { 
-                                        "$lte" : NumberLong(18)
-                                    }
-                                }
-                            ]
-                        }
-                    }, 
-                    { 
-                        "$group" : { 
-                            "_id" : { 
+    
+    db.getCollection("italians").aggregate( [ { "$match" : { "$and" : [ { "age" : { "$gte" : NumberLong(12) } }, { "age" : { "$lte" : NumberLong(18) } } ] } }, { "$group" : { "_id" : { }, "COUNT(*)" : { "$sum" : NumberInt(1) } } }, { "$project" : { "COUNT(*)" : "$COUNT(*)", "_id" : NumberInt(0) } } ], { "allowDiskUse" : true } );
 
-                            }, 
-                            "COUNT(*)" : { 
-                                "$sum" : NumberInt(1)
-                            }
-                        }
-                    }, 
-                    { 
-                        "$project" : { 
-                            "COUNT(*)" : "$COUNT(*)", 
-                            "_id" : NumberInt(0)
-                        }
-                    }
-                ], 
-                { 
-                    "allowDiskUse" : true
-                }
-            );
     Output: { "COUNT(*)" : 863 }
 
 d) Identifique quantas pessoas tem gatos, quantas tem cachorro e quantas não tem nenhum dos dois
     d.1) Tem gatos
-        Comando: db.getCollection("italians").aggregate(
-                    [
-                        { 
-                            "$match" : { 
-                                "cat" : { 
-                                    "$ne" : null
-                                }
-                            }
-                        }, 
-                        { 
-                            "$group" : { 
-                                "_id" : { 
+        
+        db.getCollection("italians").aggregate( [ { "$match" : { "cat" : { "$ne" : null } } }, { "$group" : { "_id" : { }, "COUNT(*)" : { "$sum" : NumberInt(1) } } }, { "$project" : { "COUNT(*)" : "$COUNT(*)", "_id" : NumberInt(0) } } ], { "allowDiskUse" : true } );
 
-                                }, 
-                                "COUNT(*)" : { 
-                                    "$sum" : NumberInt(1)
-                                }
-                            }
-                        }, 
-                        { 
-                            "$project" : { 
-                                "COUNT(*)" : "$COUNT(*)", 
-                                "_id" : NumberInt(0)
-                            }
-                        }
-                    ], 
-                    { 
-                        "allowDiskUse" : true
-                    }
-                );
         Output: { "COUNT(*)" : 6047 }
     
-    d.2) Tem cachorro  
-        Comando: db.getCollection("italians").aggregate(
-                    [
-                        { 
-                            "$match" : { 
-                                "dog" : { 
-                                    "$ne" : null
-                                }
-                            }
-                        }, 
-                        { 
-                            "$group" : { 
-                                "_id" : { 
+    d.2) Tem cachorro
+        
+        db.getCollection("italians").aggregate( [ { "$match" : { "dog" : { "$ne" : null } } }, { "$group" : { "_id" : { }, "COUNT(*)" : { "$sum" : NumberInt(1) } } }, { "$project" : { "COUNT(*)" : "$COUNT(*)", "_id" : NumberInt(0) } } ], { "allowDiskUse" : true } );
 
-                                }, 
-                                "COUNT(*)" : { 
-                                    "$sum" : NumberInt(1)
-                                }
-                            }
-                        }, 
-                        { 
-                            "$project" : { 
-                                "COUNT(*)" : "$COUNT(*)", 
-                                "_id" : NumberInt(0)
-                            }
-                        }
-                    ], 
-                    { 
-                        "allowDiskUse" : true
-                    }
-                );
         Output: { "COUNT(*)" : 4053 }
     
     d.3) Não tem nenhum dos dois
-        Comando: db.getCollection("italians").aggregate(
-                    [
-                        { 
-                            "$match" : { 
-                                "dog" : null, 
-                                "cat" : null
-                            }
-                        }, 
-                        { 
-                            "$group" : { 
-                                "_id" : { 
+        
+        db.getCollection("italians").aggregate( [ { "$match" : { "dog" : null, "cat" : null } }, { "$group" : { "_id" : { }, "COUNT(*)" : { "$sum" : NumberInt(1) } } }, { "$project" : { "COUNT(*)" : "$COUNT(*)", "_id" : NumberInt(0) } } ], { "allowDiskUse" : true } );
 
-                                }, 
-                                "COUNT(*)" : { 
-                                    "$sum" : NumberInt(1)
-                                }
-                            }
-                        }, 
-                        { 
-                            "$project" : { 
-                                "COUNT(*)" : "$COUNT(*)", 
-                                "_id" : NumberInt(0)
-                            }
-                        }
-                    ], 
-                    { 
-                        "allowDiskUse" : true
-                    }
-                );
         Output: { "COUNT(*)" : 2313 }
 
 e) Liste/Conte todas as pessoas acima de 60 anos que tenham gato
