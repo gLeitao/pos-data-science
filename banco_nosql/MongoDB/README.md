@@ -67,7 +67,7 @@ c) Identifique todos os jovens (pessoas entre 12 a 18 anos)
 
     Output: { "COUNT(*)" : 863 }
 
-d) Identifique quantas pessoas tem gatos, quantas tem cachorro e quantas não tem nenhum dos dois
+d) Identifique quantas pessoas tem gatos, quantas tem cachorro e quantas não tem nenhum dos dois</br>
     d.1) Tem gatos
         
         db.getCollection("italians").aggregate( [ { "$match" : { "cat" : { "$ne" : null } } }, { "$group" : { "_id" : { }, "COUNT(*)" : { "$sum" : NumberInt(1) } } }, { "$project" : { "COUNT(*)" : "$COUNT(*)", "_id" : NumberInt(0) } } ], { "allowDiskUse" : true } );
@@ -87,90 +87,21 @@ d) Identifique quantas pessoas tem gatos, quantas tem cachorro e quantas não te
         Output: { "COUNT(*)" : 2313 }
 
 e) Liste/Conte todas as pessoas acima de 60 anos que tenham gato
-    Comando: db.getCollection("italians").aggregate(
-                [
-                    { 
-                        "$match" : { 
-                            "cat" : { 
-                                "$ne" : null
-                            }, 
-                            "age" : { 
-                                "$gt" : NumberLong(60)
-                            }
-                        }
-                    }, 
-                    { 
-                        "$group" : { 
-                            "_id" : { 
+    
+    db.getCollection("italians").aggregate( [ { "$match" : { "cat" : { "$ne" : null }, "age" : { "$gt" : NumberLong(60) } } }, { "$group" : { "_id" : { }, "COUNT(*)" : { "$sum" : NumberInt(1) } } }, { "$project" : { "COUNT(*)" : "$COUNT(*)", "_id" : NumberInt(0) } } ], { "allowDiskUse" : true } );
 
-                            }, 
-                            "COUNT(*)" : { 
-                                "$sum" : NumberInt(1)
-                            }
-                        }
-                    }, 
-                    { 
-                        "$project" : { 
-                            "COUNT(*)" : "$COUNT(*)", 
-                            "_id" : NumberInt(0)
-                        }
-                    }
-                ], 
-                { 
-                    "allowDiskUse" : true
-                }
-            );
     Output: { "COUNT(*)" : 1403 }
 
 f) Liste/Conte todos os jovens com cachorro
-    Comando: db.getCollection("italians").aggregate(
-                [
-                    { 
-                        "$match" : { 
-                            "$and" : [
-                                { 
-                                    "age" : { 
-                                        "$gt" : NumberLong(12)
-                                    }
-                                }, 
-                                { 
-                                    "age" : { 
-                                        "$lt" : NumberLong(18)
-                                    }
-                                }, 
-                                { 
-                                    "dog" : { 
-                                        "$ne" : null
-                                    }
-                                }
-                            ]
-                        }
-                    }, 
-                    { 
-                        "$group" : { 
-                            "_id" : { 
+    
+    db.getCollection("italians").aggregate( [ { "$match" : { "$and" : [ { "age" : { "$gt" : NumberLong(12) } }, { "age" : { "$lt" : NumberLong(18) } }, { "dog" : { "$ne" : null } } ] } }, { "$group" : { "_id" : { }, "COUNT(*)" : { "$sum" : NumberInt(1) } } }, { "$project" : { "COUNT(*)" : "$COUNT(*)", "_id" : NumberInt(0) } } ], { "allowDiskUse" : true } );
 
-                            }, 
-                            "COUNT(*)" : { 
-                                "$sum" : NumberInt(1)
-                            }
-                        }
-                    }, 
-                    { 
-                        "$project" : { 
-                            "COUNT(*)" : "$COUNT(*)", 
-                            "_id" : NumberInt(0)
-                        }
-                    }
-                ], 
-                { 
-                    "allowDiskUse" : true
-                }
-            );
     Output: { "COUNT(*)" : 249 }
 
 g) Utilizando o $where, liste todas as pessoas que tem gato e cachorro
-    Comando: db.getCollection("italians").find( { $where: "this.cat == this.dog" } );
+    
+    db.getCollection("italians").find( { $where: "this.cat == this.dog" } );
+
     Output: { "_id" : ObjectId("5e680f09bdf084d4fe00aa91"), "firstname" : "Elena", "surname" : "Morelli", "username" : "user108", "age" : 52, "email" : "Elena.Morelli@uol.com.br", "bloodType" : "B-", "id_num" : "412035262818", "registerDate" : ISODate("2018-06-24T14:13:26.346Z"), "ticketNumber" : 9813, "jobs" : [ "História da Arte" ], "favFruits" : [ "Uva" ], "movies" : [ { "title" : "Um Estranho no Ninho (1975)", "rating" : 2.36 }, { "title" : "Seven: Os Sete Crimes Capitais (1995)", "rating" : 2.18 }, { "title" : "A Felicidade Não se Compra (1946)", "rating" : 3.21 }, { "title" : "O Senhor dos Anéis: As Duas Torres (2002)", "rating" : 2.34 } ], "father" : { "firstname" : "Mauro", "surname" : "Morelli", "age" : 69 } }
             { "_id" : ObjectId("5e680f09bdf084d4fe00aa94"), "firstname" : "Giorgio", "surname" : "Martini", "username" : "user111", "age" : 53, "email" : "Giorgio.Martini@uol.com.br", "bloodType" : "A+", "id_num" : "557403120263", "registerDate" : ISODate("2014-12-27T09:42:44.979Z"), "ticketNumber" : 1582, "jobs" : [ "Música", "Automação Industrial" ], "favFruits" : [ "Goiaba" ], "movies" : [ { "title" : "1917 (2019)", "rating" : 1.67 }, { "title" : "Seven: Os Sete Crimes Capitais (1995)", "rating" : 3.06 } ], "father" : { "firstname" : "Michele", "surname" : "Martini", "age" : 82 } }
             { "_id" : ObjectId("5e680f09bdf084d4fe00aa9d"), "firstname" : "Paola", "surname" : "Moretti", "username" : "user120", "age" : 58, "email" : "Paola.Moretti@uol.com.br", "bloodType" : "O+", "id_num" : "321741781434", "registerDate" : ISODate("2014-07-26T17:20:56.106Z"), "ticketNumber" : 1544, "jobs" : [ "Engenharia de Telecomunicações", "Mineração" ], "favFruits" : [ "Mamão", "Laranja" ], "movies" : [ { "title" : "Intocáveis (2011)", "rating" : 4.86 }, { "title" : "Parasita (2019)", "rating" : 0.81 } ] }
