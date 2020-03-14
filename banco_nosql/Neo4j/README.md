@@ -1,11 +1,12 @@
-<h2>Exercício 1-Retrieving Node</h2>
+<h2>Exercício 1 - Retrieving Node</h2>
 
 a) Retrieve all nodes from the database.
     
     match (n) return n
 
 b) Examine the data model for the graph
-call db.schema.visualization
+
+    call db.schema.visualization
 
 c) Retrieve all Person nodes
     
@@ -16,7 +17,7 @@ d) Retrieve all Movie nodes
     MATCH (p:Movie) RETURN p
 
 
-<h2>Exercício2–Filtering queries using property values</h2>
+<h2>Exercício2 – Filtering queries using property values</h2>
 
 a) Retrieve all movies that were released in a specific year
 
@@ -31,84 +32,106 @@ b) View the retrieved results as a table
     }
 
 c) Query the database for all property keys
-CALL db.propertyKeys
+
+    CALL db.propertyKeys
 
 d) Retrieve all Movies released in a specific year, returning their titles
-MATCH (p:Movie {released:2008} ) RETURN p.title
+
+    MATCH (p:Movie {released:2008} ) RETURN p.title
 
 e) Display title, released, and tagline values for every Movie node in the graph
-MATCH (p:Movie) RETURN p.title, p.released, p.tagline
+
+    MATCH (p:Movie) RETURN p.title, p.released, p.tagline
 
 f) Display more user-friendly headers in the table
-MATCH (m:Movie) RETURN m.title AS `movie title`, m.released AS released, m.tagline AS tagLine
+
+    MATCH (m:Movie) RETURN m.title AS `movie title`, m.released AS released, m.tagline AS tagLine
 
 
-Exercício3-Filtering queries using relationships
+<h2>Exercício3 - Filtering queries using relationships</h2>
 
 a) Display the schema of the database
-call db.schema.visualization
+
+    call db.schema.visualization
 
 b) Retrieve all people who wrote the movie Speed Racer
-match (p:Person)-[:WROTE]-(m:Movie {title:"Speed Racer"}) return p.name
+
+    match (p:Person)-[:WROTE]-(m:Movie {title:"Speed Racer"}) return p.name
 
 c) Retrieve all movies that are connected to the person, Tom Hanks
-match (m:Movie)<--(p:Person {name: "Tom Hanks"}) return m.title
+
+    match (m:Movie)<--(p:Person {name: "Tom Hanks"}) return m.title
 
 d) Retrieve information about the relationships Tom Hanks had with the set of movies retrieved earlier
-MATCH (m:Movie)-[rel]-(:Person {name: 'Tom Hanks'}) RETURN m.title, type(rel)
+
+    MATCH (m:Movie)-[rel]-(:Person {name: 'Tom Hanks'}) RETURN m.title, type(rel)
 
 e) Retrieve information about the roles that Tom Hanks acted in
-MATCH (m:Movie)-[rel:ACTED_IN]-(:Person {name: 'Tom Hanks'}) RETURN m.title, rel.roles
+
+    MATCH (m:Movie)-[rel:ACTED_IN]-(:Person {name: 'Tom Hanks'}) RETURN m.title, rel.roles
 
 
-Exercício 4 – Filtering queries using WHERE clause
+<h2>Exercício 4 – Filtering queries using WHERE clause</h2>
 
 a) Retrieve all movies that Tom Cruise acted in
-match (p:Person)-[:ACTED_IN]->(m:Movie) where p.name = 'Tom Cruise' return m.title
+
+    match (p:Person)-[:ACTED_IN]->(m:Movie) where p.name = 'Tom Cruise' return m.title
 
 b) Retrieve all people that were born in the 70’s
-match (p:Person) where p.born >= 1970 and p.born <= 1980 return p.name, p.born
+
+    match (p:Person) where p.born >= 1970 and p.born <= 1980 return p.name, p.born
 
 c)  Retrieve the actors who acted in the movie The Matrix who were born after 1960
-match (p:Person)-[:ACTED_IN]->(m:Movie) where p.born > 1960 and m.title = 'The Matrix' return p.name, p.born
+
+    match (p:Person)-[:ACTED_IN]->(m:Movie) where p.born > 1960 and m.title = 'The Matrix' return p.name, p.born
 
 d) Retrieve all movies by testing thenode label and a property
-MATCH (m) WHERE m:Movie RETURN m.title
+
+    MATCH (m) WHERE m:Movie RETURN m.title
 
 e) Retrieve all people that wrote movies by testing the relationship between two nodes
-match (p)-[rel]-(m) where p:Person and type(rel) = 'WROTE' and m:Movie return p.name, m.title
+
+    match (p)-[rel]-(m) where p:Person and type(rel) = 'WROTE' and m:Movie return p.name, m.title
 
 f)  Retrieve all people in the graph that do not have a property
-match (p:Person) where not exists(p.born) return p.name
+
+    match (p:Person) where not exists(p.born) return p.name
 
 g) Retrieve all people related to movies where the relationship has a property
-match (p:Person)-[rel]->(m:Movie) where not exists(rel.rating) return p.name, m.title, rel.rating
+
+    match (p:Person)-[rel]->(m:Movie) where not exists(rel.rating) return p.name, m.title, rel.rating
 
 h) Retrieve all actors whose name begins with James
-match (p:Person)-[:ACTED_IN]->(m:Movie) where p.name STARTS WITH 'James' return p.name
+
+    match (p:Person)-[:ACTED_IN]->(m:Movie) where p.name STARTS WITH 'James' return p.name
 
 i) Retrieve all all REVIEW relationships from the graph with filtered results
 
 j) Retrieve all people who have produced a movie, but have not directed a movie
-MATCH (a:Person)-[:PRODUCED]->(m:Movie) WHERE NOT ((a)-[:DIRECTED]->(:Movie)) RETURN a.name, m.title
+
+    MATCH (a:Person)-[:PRODUCED]->(m:Movie) WHERE NOT ((a)-[:DIRECTED]->(:Movie)) RETURN a.name, m.title
 
 k)  Retrieve the movies and their actors where one of the actors also directed the movie.
-match (p:Person)-[:ACTED_IN]->(m:Movie) where not (p)-[:DIRECTED]->(m) return p.name, m.title
+
+    match (p:Person)-[:ACTED_IN]->(m:Movie) where not (p)-[:DIRECTED]->(m) return p.name, m.title
 
 l)  Retrieve all movies that were released in a set of years
-match (m:Movie) where m.released in [2000,2001, 2002] return m.title
+
+    match (m:Movie) where m.released in [2000,2001, 2002] return m.title
 
 m) Retrieve the movies that have an actor’s role that is the name of the movie
-match (a:Person)-[r:ACTED_IN]->(m:Movie) WHERE m.title in r.roles RETURN  m.title as Movie, a.name as Actor
+
+    match (a:Person)-[r:ACTED_IN]->(m:Movie) WHERE m.title in r.roles RETURN  m.title as Movie, a.name as Actor
 
 
 Exercício 5 – Controlling query processing
 
 a) Retrieve data using multiple MATCH patterns
-MATCH (a:Person)-[:ACTED_IN]->(m:Movie)<-[:DIRECTED]-(d:Person),
-      (a2:Person)-[:ACTED_IN]->(m)
-WHERE a.name = 'Gene Hackman'
-RETURN m.title as movie, d.name AS director , a2.name AS coactors
+
+  MATCH (a:Person)-[:ACTED_IN]->(m:Movie)<-[:DIRECTED]-(d:Person),
+        (a2:Person)-[:ACTED_IN]->(m)
+  WHERE a.name = 'Gene Hackman'
+  RETURN m.title as movie, d.name AS director , a2.name AS coactors
 
 b) Retrieve particular nodes that have a relationship
 MATCH (p1:Person)-[:FOLLOWS]-(p2:Person)
