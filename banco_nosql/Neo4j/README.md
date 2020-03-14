@@ -1,6 +1,7 @@
 Exercício 1-Retrieving Node
 
 a) Retrieve all nodes from the database.
+
 match (n) return n
 
 b) Examine the data model for the graph
