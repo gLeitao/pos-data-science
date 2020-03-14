@@ -107,6 +107,8 @@ h) Retrieve all actors whose name begins with James
 
 i) Retrieve all all REVIEW relationships from the graph with filtered results
 
+    MATCH (:Person)-[r:REVIEWED]->(m:Movie) WHERE toLower(r.summary) CONTAINS 'fun' RETURN  m.title as Movie, r.summary as Review, r.rating as Rating
+
 j) Retrieve all people who have produced a movie, but have not directed a movie
 
     MATCH (a:Person)-[:PRODUCED]->(m:Movie) WHERE NOT ((a)-[:DIRECTED]->(:Movie)) RETURN a.name, m.title
