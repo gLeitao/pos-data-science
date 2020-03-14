@@ -128,10 +128,10 @@ Exercício 5 – Controlling query processing
 
 a) Retrieve data using multiple MATCH patterns
 
-  MATCH (a:Person)-[:ACTED_IN]->(m:Movie)<-[:DIRECTED]-(d:Person),
-        (a2:Person)-[:ACTED_IN]->(m)
-  WHERE a.name = 'Gene Hackman'
-  RETURN m.title as movie, d.name AS director , a2.name AS coactors
+    MATCH (a:Person)-[:ACTED_IN]->(m:Movie)<-[:DIRECTED]-(d:Person),
+    (a2:Person)-[:ACTED_IN]->(m)
+    WHERE a.name = 'Gene Hackman'
+    RETURN m.title as movie, d.name AS director , a2.name AS coactors
 
 b) Retrieve particular nodes that have a relationship
 MATCH (p1:Person)-[:FOLLOWS]-(p2:Person)
