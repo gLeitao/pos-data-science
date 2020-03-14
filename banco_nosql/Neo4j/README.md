@@ -129,7 +129,7 @@ Exercício 5 – Controlling query processing
 a) Retrieve data using multiple MATCH patterns
 
     MATCH (a:Person)-[:ACTED_IN]->(m:Movie)<-[:DIRECTED]-(d:Person),
-    (a2:Person)-[:ACTED_IN]->(m)
+          (a2:Person)-[:ACTED_IN]->(m)
     WHERE a.name = 'Gene Hackman'
     RETURN m.title as movie, d.name AS director , a2.name AS coactors
 
