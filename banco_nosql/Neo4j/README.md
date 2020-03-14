@@ -124,7 +124,7 @@ m) Retrieve the movies that have an actor’s role that is the name of the movie
     match (a:Person)-[r:ACTED_IN]->(m:Movie) WHERE m.title in r.roles RETURN  m.title as Movie, a.name as Actor
 
 
-Exercício 5 – Controlling query processing
+<h2>Exercício 5 – Controlling query processing</h2>
 
 a) Retrieve data using multiple MATCH patterns
 
@@ -134,211 +134,269 @@ a) Retrieve data using multiple MATCH patterns
     RETURN m.title as movie, d.name AS director , a2.name AS coactors
 
 b) Retrieve particular nodes that have a relationship
-MATCH (p1:Person)-[:FOLLOWS]-(p2:Person)
-WHERE p1.name = 'James Thompson'
-RETURN p1, p2
+
+    MATCH (p1:Person)-[:FOLLOWS]-(p2:Person)
+    WHERE p1.name = 'James Thompson'
+    RETURN p1, p2
 
 c)  Modify the query to retrieve nodes that are exactly three hops away
-MATCH (p1:Person)-[:FOLLOWS*3]-(p2:Person)
-WHERE p1.name = 'James Thompson'
-RETURN p1, p2
+
+    MATCH (p1:Person)-[:FOLLOWS*3]-(p2:Person)
+    WHERE p1.name = 'James Thompson'
+    RETURN p1, p2
 
 d)  Modify the query to retrieve nodes that are one and two hops away
-MATCH (p1:Person)-[:FOLLOWS*1..2]-(p2:Person)
-WHERE p1.name = 'James Thompson'
-RETURN p1, p2
+
+    MATCH (p1:Person)-[:FOLLOWS*1..2]-(p2:Person)
+    WHERE p1.name = 'James Thompson'
+    RETURN p1, p2
 
 e) Modify the query to retrieveparticular nodes that are connected no matter how many hops are required
-MATCH (p1:Person)-[:FOLLOWS*]-(p2:Person)
-WHERE p1.name = 'James Thompson'
-RETURN p1, p2
+
+    MATCH (p1:Person)-[:FOLLOWS*]-(p2:Person)
+    WHERE p1.name = 'James Thompson'
+    RETURN p1, p2
 
 f) Specify optional data to be retrieved during the query
-match (p:Person) where p.name STARTS WITH 'Tom' optional match (p)-[:DIRECTED]->(m:Movie) return p.name, m.title
+
+    match (p:Person) where p.name STARTS WITH 'Tom' optional match (p)-[:DIRECTED]->(m:Movie) return p.name, m.title
 
 g)  Retrieve nodes by collecting a list
-match (p:Person)-[r:ACTED_IN]->(m:Movie) return p.name, collect(m.title)
+
+    match (p:Person)-[r:ACTED_IN]->(m:Movie) return p.name, collect(m.title)
 
 h) Retrieve nodes as lists and return data associated with the corresponding lists
-MATCH (p:Person)-[:REVIEWED]->(m:Movie) RETURN m.title as movie, count(p) as numReviews, collect(p.name) as reviewers
+
+    MATCH (p:Person)-[:REVIEWED]->(m:Movie) RETURN m.title as movie, count(p) as numReviews, collect(p.name) as reviewers
 
 i) Retrieve nodes and their relationships as lists
-match (p:Person)-[:ACTED_IN]->(m:Movie)<-[:ACTED_IN]-(p1:Person) return p.name, count(p1), collect(p1.name)
+
+    match (p:Person)-[:ACTED_IN]->(m:Movie)<-[:ACTED_IN]-(p1:Person) return p.name, count(p1), collect(p1.name)
 
 j)  Retrieve the actors who have acted in exactly five movies
-match (p:Person)-[:ACTED_IN]->(m:Movie) with p, count(p) as movies, collect(m.title) as titles return p.name, titles
+
+    match (p:Person)-[:ACTED_IN]->(m:Movie) with p, count(p) as movies, collect(m.title) as titles return p.name, titles
 
 
-Exercício 6 – Controlling results returned
+<h2>Exercício 6 – Controlling results returned</h2>
 
 a) Execute a query that returns duplicate records
-MATCH (a:Person)-[:ACTED_IN]->(m:Movie) WHERE m.released >= 1990 AND m.released < 2000 RETURN DISTINCT m.released, m.title, collect(a.name)
+
+    MATCH (a:Person)-[:ACTED_IN]->(m:Movie) WHERE m.released >= 1990 AND m.released < 2000 RETURN DISTINCT m.released, m.title, collect(a.name)
 
 b) Modify the query to eliminate duplication
-MATCH (a:Person)-[:ACTED_IN]->(m:Movie) WHERE m.released >= 1990 AND m.released < 2000 RETURN  m.released, collect(m.title), collect(a.name)
+
+    MATCH (a:Person)-[:ACTED_IN]->(m:Movie) WHERE m.released >= 1990 AND m.released < 2000 RETURN  m.released, collect(m.title), collect(a.name)
 
 c) Modify the query to eliminate more duplication
-MATCH (a:Person)-[:ACTED_IN]->(m:Movie) WHERE m.released >= 1990 AND m.released < 2000 RETURN  m.released, collect(DISTINCT m.title), collect(a.name)
+
+    MATCH (a:Person)-[:ACTED_IN]->(m:Movie) WHERE m.released >= 1990 AND m.released < 2000 RETURN  m.released, collect(DISTINCT m.title), collect(a.name)
 
 d) Sort results returned
-MATCH (a:Person)-[:ACTED_IN]->(m:Movie) WHERE m.released >= 1990 AND m.released < 2000 RETURN  m.released, collect(DISTINCT m.title), collect(a.name) ORDER BY m.released DESC
+
+    MATCH (a:Person)-[:ACTED_IN]->(m:Movie) WHERE m.released >= 1990 AND m.released < 2000 RETURN  m.released, collect(DISTINCT m.title), collect(a.name) ORDER BY m.released DESC
 
 e) Retrieve the top 5 ratings and their associated movies
-MATCH (:Person)-[r:REVIEWED]->(m:Movie) RETURN  m.title AS movie, r.rating AS rating ORDER BY r.rating DESC LIMIT 5
+    
+    MATCH (:Person)-[r:REVIEWED]->(m:Movie) RETURN  m.title AS movie, r.rating AS rating ORDER BY r.rating DESC LIMIT 5
 
 f)  Retrieve all actors that have not appeared in more than 3 movies
-MATCH (a:Person)-[:ACTED_IN]->(m:Movie) WITH  a,  count(a) AS numMovies, collect(m.title) AS movies WHERE numMovies <= 3 RETURN a.name, movies
+
+    MATCH (a:Person)-[:ACTED_IN]->(m:Movie) WITH  a,  count(a) AS numMovies, collect(m.title) AS movies WHERE numMovies <= 3 RETURN a.name, movies
 
 
-Exercício 7 – Working with cypher data
+<h2>Exercício 7 – Working with cypher data</h2>
 
 a) Collect and use lists
-MATCH (a:Person)-[:ACTED_IN]->(m:Movie), (m)<-[:PRODUCED]-(p:Person) WITH  m, collect(DISTINCT a.name) AS cast, collect(DISTINCT p.name) AS producers RETURN DISTINCT m.title, cast, producers ORDER BY size(cast)
+
+    MATCH (a:Person)-[:ACTED_IN]->(m:Movie), (m)<-[:PRODUCED]-(p:Person) WITH  m, collect(DISTINCT a.name) AS cast, collect(DISTINCT p.name) AS producers RETURN DISTINCT m.title, cast, producers ORDER BY size(cast)
 
 b) Collect a list
-MATCH (p:Person)-[:ACTED_IN]->(m:Movie) WITH p, collect(m) AS movies WHERE size(movies)  > 5 RETURN p.name, movies
 
-c)  Unwind a lis
-MATCH (p:Person)-[:ACTED_IN]->(m:Movie) WITH p, collect(m) AS movies WHERE size(movies)  > 5 WITH p, movies UNWIND movies AS movie RETURN p.name, movie.title
+    MATCH (p:Person)-[:ACTED_IN]->(m:Movie) WITH p, collect(m) AS movies WHERE size(movies)  > 5 RETURN p.name, movies
+
+c)  Unwind a list
+
+    MATCH (p:Person)-[:ACTED_IN]->(m:Movie) WITH p, collect(m) AS movies WHERE size(movies)  > 5 WITH p, movies UNWIND movies AS movie RETURN p.name, movie.title
 
 d) Perform a calculation with thedate type
-MATCH (a:Person)-[:ACTED_IN]->(m:Movie) WHERE a.name = 'Tom Hanks' RETURN  m.title, m.released, date().year  - m.released as yearsAgoReleased, m.released  - a.born AS `age of Tom` ORDER BY yearsAgoReleased
+
+    MATCH (a:Person)-[:ACTED_IN]->(m:Movie) WHERE a.name = 'Tom Hanks' RETURN  m.title, m.released, date().year  - m.released as yearsAgoReleased, m.released  - a.born AS `age of Tom` ORDER BY yearsAgoReleased
 
 
-Exercício 8 – Creating nodes
+<h2>Exercício 8 – Creating nodes</h2>
 
 a)  Create a Movie node
-CREATE (:Movie {title: 'Forrest Gump'})
+
+    CREATE (:Movie {title: 'Forrest Gump'})
 
 b) Retrieve the newly-created node
-match (m:Movie {title: 'Forrest Gump'}) return m.title
+
+    match (m:Movie {title: 'Forrest Gump'}) return m.title
 
 c) Create a Person node
-CREATE (:Person {name: 'Robin Wright'})
+
+    CREATE (:Person {name: 'Robin Wright'})
 
 d)  Retrieve the newly-created node
-match (p:Person {name: 'Robin Wright'}) return p.name
+
+    match (p:Person {name: 'Robin Wright'}) return p.name
 
 e) Add a label to a node
-MATCH (m:Movie) WHERE m.released < 2010 SET m:OlderMovie RETURN DISTINCT labels(m)
+
+    MATCH (m:Movie) WHERE m.released < 2010 SET m:OlderMovie RETURN DISTINCT labels(m)
 
 f) Retrieve the node using the new label
-MATCH (m:OlderMovie) RETURN m.title, m.released
+
+    MATCH (m:OlderMovie) RETURN m.title, m.released
 
 g) Add the Female label to selected nodes
-MATCH (p:Person) WHERE p.name STARTS WITH 'Robin' SET p:Female
+
+    MATCH (p:Person) WHERE p.name STARTS WITH 'Robin' SET p:Female
 
 h) Retrieve all Female nodes
-match (p:Female) return p.name
+
+    match (p:Female) return p.name
 
 i) Remove the Female label from the nodes that have this label
-MATCH (p:Female) REMOVE p:Female
+
+    MATCH (p:Female) REMOVE p:Female
 
 j) View the current schema of the graph
-call db.schema.visualization
+
+    call db.schema.visualization
 
 k)  Add properties to a movie
-MATCH (m:Movie) WHERE m.title = 'Forrest Gump'
-SET m:OlderMovie,
+
+    MATCH (m:Movie) WHERE m.title = 'Forrest Gump'
+    SET m:OlderMovie,
     m.released = 1994,
     m.tagline = "Life is like a box of chocolates...you never know what you're gonna get.",
     m.lengthInMinutes = 142
 
 l)  Retrieve an OlderMovie node to confirm the label and properties
-match (o:OlderMovie {title: 'Forrest Gump'}) return o
+
+    match (o:OlderMovie {title: 'Forrest Gump'}) return o
 
 m) Add properties to the person, Robin Wright
-MATCH (p:Person {name: 'Robin Wright'})
-SET p.born = 1966, p.birthPlace = 'Dallas'
+
+    MATCH (p:Person {name: 'Robin Wright'})
+    SET p.born = 1966, p.birthPlace = 'Dallas'
 
 n)  Retrieve an updated Person node
-MATCH (p:Person {name: 'Robin Wright'}) return p
+
+    MATCH (p:Person {name: 'Robin Wright'}) return p
 
 o) Remove a property from a Movie node
-MATCH (m:Movie {title: 'Forrest Gump'})
-SET m.lengthInMinutes = null
+
+    MATCH (m:Movie {title: 'Forrest Gump'})
+    SET m.lengthInMinutes = null
 
 p)  Retrieve the node to confirm that the property has been removed
-MATCH (m:Movie {title: 'Forrest Gump'}) return m
+
+    MATCH (m:Movie {title: 'Forrest Gump'}) return m
 
 q) Remove a property from a Person node
-MATCH (p:Person {name: 'Robin Wright'})
-REMOVE p.birthPlace
+
+    MATCH (p:Person {name: 'Robin Wright'})
+    REMOVE p.birthPlace
 
 l) Retrieve the node to confirm that the property has been removed
-MATCH (p:Person {name: 'Robin Wright'}) return p
+
+    MATCH (p:Person {name: 'Robin Wright'}) return p
 
 
-Exercício 9 – Creating relationships
+<h2>Exercício 9 – Creating relationships</h2>
 
 a) Create ACTED_IN relationships
-MATCH (m:Movie) WHERE m.title = 'Forrest Gump'
-MATCH (p:Person) WHERE p.name = 'Tom Hanks' OR p.name = 'Robin Wright' OR p.name = 'Gary Sinise'
-CREATE (p)-[:ACTED_IN]->(m)
+
+    MATCH (m:Movie) WHERE m.title = 'Forrest Gump'
+    MATCH (p:Person) WHERE p.name = 'Tom Hanks' OR p.name = 'Robin Wright' OR p.name = 'Gary Sinise'
+    CREATE (p)-[:ACTED_IN]->(m)
 
 b) Create DIRECTED relationships
-MATCH (m:Movie) WHERE m.title = 'Forrest Gump'
-MATCH (p:Person) WHERE p.name = 'Robert Zemeckis'
-CREATE (p)-[:DIRECTED]->(m)
+
+    MATCH (m:Movie) WHERE m.title = 'Forrest Gump'
+    MATCH (p:Person) WHERE p.name = 'Robert Zemeckis'
+    CREATE (p)-[:DIRECTED]->(m)
 
 c) Create a HELPED relationship
-MATCH (p1:Person) WHERE p1.name = 'Tom Hanks'
-MATCH (p2:Person) WHERE p2.name = 'Gary Sinise'
-CREATE (p1)-[:HELPED]->(p2)
+
+    
+    db.exercicio_mongo.insert({name:"Frodo",species:"Peixe"})
+    MATCH (p1:Person) WHERE p1.name = 'Tom Hanks'
+    MATCH (p2:Person) WHERE p2.name = 'Gary Sinise'
+    CREATE (p1)-[:HELPED]->(p2)
 
 d) Query nodes and new relationships
-match (p:Person)-[rel]-(m:Movie {title: 'Forrest Gump'}) return p, rel, m
+
+    match (p:Person)-[rel]-(m:Movie {title: 'Forrest Gump'}) return p, rel, m
 
 e) Add properties to relationships
-MATCH (p:Person)-[rel:ACTED_IN]->(m:Movie {title: 'Forrest Gump'})
-SET rel.roles =
-CASE p.name
-  WHEN 'Tom Hanks' THEN ['Forrest Gump']
-  WHEN 'Robin Wright' THEN ['Jenny Curran']
-  WHEN 'Gary Sinise' THEN ['Lieutenant Dan Taylor']
-END
+
+    MATCH (p:Person)-[rel:ACTED_IN]->(m:Movie {title: 'Forrest Gump'})
+    SET rel.roles =
+    CASE p.name
+      WHEN 'Tom Hanks' THEN ['Forrest Gump']
+      WHEN 'Robin Wright' THEN ['Jenny Curran']
+      WHEN 'Gary Sinise' THEN ['Lieutenant Dan Taylor']
+    END
 
 f) Add a property to the HELPED relationship
-MATCH (p1:Person {name: 'Tom Hanks'})-[rel:HELPED]->(p2:Person {name: 'Gary Sinise'}) SET rel.research = 'war history'
+
+    MATCH (p1:Person {name: 'Tom Hanks'})-[rel:HELPED]->(p2:Person {name: 'Gary Sinise'}) SET rel.research = 'war history'
 
 g)  View the current list of property keys in the graph
-call db.propertyKeys
+
+    call db.propertyKeys
 
 h) View the current schema of the graph
-call db.schema.visualization
+
+    call db.schema.visualization
 
 i) Retrieve the names and roles for actors
-match (p:Person)-[rel:ACTED_IN]->(m:Movie {title: 'Forrest Gump'}) return p.name, rel.roles
+
+    match (p:Person)-[rel:ACTED_IN]->(m:Movie {title: 'Forrest Gump'}) return p.name, rel.roles
 
 j)  Retrieve information about any specific relationships
-match (p:Person)-[rel:HELPED]-(p2:Person) return p.name, rel, p2.name
+
+    match (p:Person)-[rel:HELPED]-(p2:Person) return p.name, rel, p2.name
 
 k) Modify a property of a relationship
-match (p:Person {name: 'Gary Sinise'})-[rel:ACTED_IN]->(m:Movie {title: 'Forrest Gump'}) set rel.roles = ['Lt. Dan Taylor']
+
+    match (p:Person {name: 'Gary Sinise'})-[rel:ACTED_IN]->(m:Movie {title: 'Forrest Gump'}) set rel.roles = ['Lt. Dan Taylor']
 
 l)  Remove a property from a relationship
-MATCH (p1:Person {name: 'Tom Hanks'})-[rel:HELPED]->(p2:Person {name: 'Gary Sinise'}) REMOVE rel.research
+
+    MATCH (p1:Person {name: 'Tom Hanks'})-[rel:HELPED]->(p2:Person {name: 'Gary Sinise'}) REMOVE rel.research
 
 m)  Confirm that your modifications were made to the graph
-MATCH (p:Person)-[rel:ACTED_IN]->(m:Movie {title: 'Forrest Gump'}) return p, rel, m
+
+    MATCH (p:Person)-[rel:ACTED_IN]->(m:Movie {title: 'Forrest Gump'}) return p, rel, m
 
 
-Exercício 10 – Deleting nodes and relationships
+<h2>Exercício 10 – Deleting nodes and relationships</h2>
 
 a)  Delete a relationship
-MATCH (:Person)-[rel:HELPED]-(:Person) DELETE rel
+
+    MATCH (:Person)-[rel:HELPED]-(:Person) DELETE rel
 
 b) Confirm that the relationship has been deleted
-MATCH (:Person)-[rel:HELPED]-(:Person) RETURN rel
+
+    MATCH (:Person)-[rel:HELPED]-(:Person) RETURN rel
 
 c) Retrieve a movie and all of its relationships
-match (m:Movie {title: 'Forrest Gump'})-[rel]-(p:Person) return m, rel, p
+
+    match (m:Movie {title: 'Forrest Gump'})-[rel]-(p:Person) return m, rel, p
 
 d) Try deleting a node without detaching its relationships
-MATCH (m:Movie) WHERE m.title = 'Forrest Gump' DELETE m
+
+    MATCH (m:Movie) WHERE m.title = 'Forrest Gump' DELETE m
 
 e) Delete a Movie node, along with its relationships
-MATCH (m:Movie {title: 'Forrest Gump'}) DETACH DELETE m
+
+    MATCH (m:Movie {title: 'Forrest Gump'}) DETACH DELETE m
 
 f) Confirm that the Movie node has been deleted
-MATCH (m:Movie {title: 'Forrest Gump'}) return m
+
+    MATCH (m:Movie {title: 'Forrest Gump'}) return m
