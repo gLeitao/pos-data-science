@@ -1,4 +1,4 @@
-Exercício 1-Retrieving Node
+<h2>Exercício 1-Retrieving Node</h2>
 
 a) Retrieve all nodes from the database.
     
@@ -8,23 +8,27 @@ b) Examine the data model for the graph
 call db.schema.visualization
 
 c) Retrieve all Person nodes
-MATCH (p:Person) RETURN p
+    
+    MATCH (p:Person) RETURN p
 
 d) Retrieve all Movie nodes
-MATCH (p:Movie) RETURN p
+
+    MATCH (p:Movie) RETURN p
 
 
-Exercício2–Filtering queries using property values
+<h2>Exercício2–Filtering queries using property values</h2>
 
 a) Retrieve all movies that were released in a specific year
-MATCH (p:Movie {released:2008} ) RETURN p
+
+    MATCH (p:Movie {released:2008} ) RETURN p
 
 b) View the retrieved results as a table
-{
-  "title": "Speed Racer",
-  "tagline": "Speed has no limits",
-  "released": 2008
-}
+
+    {
+      "title": "Speed Racer",
+      "tagline": "Speed has no limits",
+      "released": 2008
+    }
 
 c) Query the database for all property keys
 CALL db.propertyKeys
