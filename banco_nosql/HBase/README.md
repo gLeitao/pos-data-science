@@ -1,4 +1,4 @@
-<h2>Exercicio 1 - Crie a tabela com 2 famílias de colunas</h2)
+<h2>Exercicio 1 - Crie a tabela com 2 famílias de colunas</h2>
 a) Crie a tabela com 2 famílias de colunas: 
    personal-data
    professional-data
