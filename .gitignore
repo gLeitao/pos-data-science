@@ -133,6 +133,9 @@ venv.bak/
 
 .vscode
 
+#R
+.Rhistory
+
 # local dir for temporary stuff
 temp/
 credit_prospec/
