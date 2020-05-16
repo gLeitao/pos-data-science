@@ -98,7 +98,7 @@ shapiro.test(dados_ind$peso_comida[dados_ind$sexo==0])
 # homogenidades das variancias
 library(car)
 
-
+leveneTest(dados_ind$peso_comida, dados_ind$sexo, center = mean)
 
 
 #teste t de duas amostrar independentes propriamente dito
