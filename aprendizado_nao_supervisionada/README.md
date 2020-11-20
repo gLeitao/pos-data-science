@@ -41,17 +41,17 @@ seja desisntalada para evitar qualquer tipo de conflito com a biblioteca atual.
 
 Apos o treinamento do modelo, foram obtidos os resultados abaixo:  
 
-10 Componentes principais, acurácia:  94.31 %
-11 Componentes principais, acurácia:  95.12 %
-12 Componentes principais, acurácia:  95.12 %
-13 Componentes principais, acurácia:  95.12 %
-14 Componentes principais, acurácia:  93.5 %
-15 Componentes principais, acurácia:  93.5 %
-16 Componentes principais, acurácia:  94.31 %
-17 Componentes principais, acurácia:  94.31 %
-18 Componentes principais, acurácia:  93.5 %
-19 Componentes principais, acurácia:  93.5 %
-20 Componentes principais, acurácia:  94.31 %
+ - 10 Componentes principais, acurácia:  94.31 %
+ - 11 Componentes principais, acurácia:  95.12 %
+ - 12 Componentes principais, acurácia:  95.12 %
+ - 13 Componentes principais, acurácia:  95.12 %
+ - 14 Componentes principais, acurácia:  93.5 %
+ - 15 Componentes principais, acurácia:  93.5 %
+ - 16 Componentes principais, acurácia:  94.31 %
+ - 17 Componentes principais, acurácia:  94.31 %
+ - 18 Componentes principais, acurácia:  93.5 %
+ - 19 Componentes principais, acurácia:  93.5 %
+ - 20 Componentes principais, acurácia:  94.31 %
 
 </p>
 
