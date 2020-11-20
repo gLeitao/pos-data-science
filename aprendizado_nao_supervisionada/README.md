@@ -34,7 +34,7 @@ seja desisntalada para evitar qualquer tipo de conflito com a biblioteca atual.
 
 </br>
 
-Segundo passo é rodar o script trabalho_reconhecimento_facial.py disponivel neste repositorio, o resultado será disponibillizado no console.
+Segundo passo é rodar o script trabalho_reconhecimento_facial.py ou caso prefira no jupiter notebook trabalho_reconhecimento_facial.ipynb, ambos scripts disponiveis neste repositorio.
 
 </p>
 
