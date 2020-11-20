@@ -56,6 +56,10 @@ Apos o treinamento do modelo, foram obtidos os resultados abaixo:
  - 18 Componentes principais, acurácia:  93.5 %
  - 19 Componentes principais, acurácia:  93.5 %
  - 20 Componentes principais, acurácia:  94.31 %
+ 
+</br>
+
+Mais detalhes sobre a execução podem ser analistados nos arquivos trabalho_reconhecimento_facial.ipynb e trabalho_reconhecimento_facial.html, disponibilziados neste respositorio.
 
 </p>
 
